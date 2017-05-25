@@ -15,7 +15,10 @@ the GNU AGPL version 3. See `LICENSE` for details.
 
 * [Go](https://golang.org)
 
-In the future you will probably need PostrgeSQL, Vue.js, and a web server.
+In the future you will probably need PostrgeSQL.
+
+We suggest exposing this to the internet via a reverse proxy, such as
+[NGINX](https://www.nginx.com).
 
 # Download and Install
 
@@ -40,3 +43,7 @@ contribute, you may either submit an
 [issue on GitHub](https://github.com/FriendlyLinuxPlayers/flip.earth/issues)
 or join us in the [Matrix](https://matrix.org) room for our website, at
 [#website:flip.earth](https://matrix.to/#/#website:flip.earth).
+
+For fixes that pass all tests, pull requests are accepted, but to avoid any
+wasted effort, please contact us before submitting a pull request with other
+changes.
