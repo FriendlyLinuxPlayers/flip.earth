@@ -1,6 +1,6 @@
 package config
 
-// Config represents
+// Config represents the basic application configuration
 type Config struct {
 	Db DBConfig `json:"db"`
 }
