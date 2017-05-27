@@ -1,4 +1,4 @@
-package cservice
+package config
 
 import (
 	"encoding/json"
