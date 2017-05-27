@@ -19,27 +19,19 @@ func (b *Builder) Build() (Container, error) {
 	servs := make(map[string]interface{}, numDefs)
 	for _, def := range b.definitions {
 		numDeps := len(def.Dependencies)
-		if numDeps == 0 {
-			service, err := def.Initializer.Init(map[string]interface{}{}, def.Configuration)
-			if err != nil {
-				return nil, err
+		deps := make(map[string]interface{}, numDeps)
+		for _, name := range def.Dependencies {
+			dep, ok := servs[name]
+			if !ok {
+				return nil, fmt.Errorf("service: Could not find dependency %q for service %q. Please make sure to insert them in order", name, def.Name)
 			}
-			servs[def.Name] = service
-		} else {
-			deps := make(map[string]interface{}, numDeps)
-			for _, name := range def.Dependencies {
-				dep, ok := servs[name]
-				if !ok {
-					return nil, fmt.Errorf("service: Could not find dependency %q for service %q. Please make sure to insert them in order", name, def.Name)
-				}
-				deps[name] = dep
-			}
-			service, err := def.Initializer.Init(deps, def.Configuration)
-			if err != nil {
-				return nil, err
-			}
-			servs[def.Name] = service
+			deps[name] = dep
 		}
+		service, err := def.Initializer.Init(deps, def.Configuration)
+		if err != nil {
+			return nil, err
+		}
+		servs[def.Name] = service
 	}
 
 	return SimpleContainer{
