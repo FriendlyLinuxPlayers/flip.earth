@@ -9,6 +9,7 @@ import (
 	"github.com/friendlylinuxplayers/flip.earth/config"
 	_ "github.com/friendlylinuxplayers/flip.earth/router"
 	_ "github.com/friendlylinuxplayers/flip.earth/server"
+	_ "github.com/friendlylinuxplayers/flip.earth/service"
 )
 
 // TODO refactor out everything so main only contains main func with minimal code

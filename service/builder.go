@@ -4,10 +4,10 @@ type Builder struct {
 	definitions []Definition
 }
 
-func Insert(def Definition) {
-	append(definitions, def)
+func (b *Builder) Insert(def Definition) {
+	append(b.definitions, def)
 }
 
-func Build() Container, error {
+func (b *Builder) Build() (Container, error) {
 	// TODO: actually process the definitions slice to create a container
 }
