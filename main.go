@@ -13,18 +13,21 @@ import (
 // TODO refactor out everything so main only contains minimal code
 func main() {
 	b := new(service.Builder)
-	configDef := service.Definition{"config", make([]string, 0), make(map[string]interface{}), cservice.Reader{}}
+	configDef := service.Definition{
+		Name:          "config",
+		Dependencies:  make([]string, 0),
+		Configuration: make(map[string]interface{}),
+		Initializer:   cservice.Reader{},
+	}
 	b.Insert(configDef)
 	container, error := b.Build()
 	if error != nil {
 		panic(error)
-		return
 	}
 
 	service, error := container.Get("config")
 	if error != nil {
 		panic(error)
-		return
 	}
 	fmt.Printf("Config %+v \n", service)
 }
