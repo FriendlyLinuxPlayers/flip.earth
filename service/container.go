@@ -36,5 +36,5 @@ type ContainerBuilder interface {
 	Insert(def Definition)
 	//Build should be called when all services have been inserted into the builder
 	//ith then returns a finished, usable Container or an error
-	Build() (Container, error)
+	Build() (*Container, error)
 }

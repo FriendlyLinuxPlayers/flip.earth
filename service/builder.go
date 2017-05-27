@@ -36,7 +36,7 @@ func (b *Builder) Build() (Container, error) {
 		servs[def.Name] = service
 	}
 
-	return SimpleContainer{
+	return &SimpleContainer{
 		services: servs,
 	}, nil
 }
