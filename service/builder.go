@@ -5,9 +5,10 @@ type Builder struct {
 }
 
 func (b *Builder) Insert(def Definition) {
-	append(b.definitions, def)
+	b.definitions = append(b.definitions, def)
 }
 
 func (b *Builder) Build() (Container, error) {
 	// TODO: actually process the definitions slice to create a container
+	return nil, nil
 }
