@@ -23,8 +23,8 @@ func (b *Builder) Build() (Container, error) {
 		for _, name := range def.Dependencies {
 			dep, ok := servs[name]
 			if !ok {
-				return nil, fmt.Errorf("service: Could not find"+
-					"dependency %q for service %q. Please make"+
+				return nil, fmt.Errorf("service: Could not find "+
+					"dependency %q for service %q. Please make "+
 					"sure to insert them in order", name, def.Name)
 			}
 			deps[name] = dep
