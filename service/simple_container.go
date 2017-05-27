@@ -12,7 +12,7 @@ func (sc SimpleContainer) Get(name string) (interface{}, error) {
 	if s, ok := sc.services[name]; ok {
 		return s, nil
 	}
-	return nil, fmt.Errorf("service: Container does not have service %q", name)
+	return nil, fmt.Errorf("service: SimpleContainer does not have service %q", name)
 }
 
 //Has checks if a service under the given name exists within the container
