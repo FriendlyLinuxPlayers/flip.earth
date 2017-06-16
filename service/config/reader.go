@@ -9,16 +9,16 @@ import (
 	"github.com/friendlylinuxplayers/flip.earth/config"
 )
 
-//Reader is the service for getting the application configuration. It cannot be
-// rebuilt or changed after it is first used.
+// Reader implements the Initializer interface for getting the application
+// configuration. It cannot be rebuilt or changed after it is first used.
 type Reader struct{}
 
-//Init returns the config service, which is just a struct containing the data.
+// Init returns the Config service, which is just a struct containing the data.
 func (r Reader) Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
 	return parseConfig()
 }
 
-//Reads the default and user json config files, returning a Config.
+// parseConfig reads the default and user json config files, returning a Config.
 func parseConfig() (*config.Config, error) {
 	cfgFile, err := ioutil.ReadFile("config/default/config.json")
 	if err != nil {
@@ -38,7 +38,7 @@ func parseConfig() (*config.Config, error) {
 	return cfg, nil
 }
 
-//Merges the user config.json data with the provided Config.
+// mergeUserConfig adds the user config.json data to the provided Config.
 func mergeUserConfig(cfg *config.Config) error {
 	if _, err := os.Stat("config/config.json"); os.IsNotExist(err) {
 		return nil

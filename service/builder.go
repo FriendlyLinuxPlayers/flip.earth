@@ -2,18 +2,18 @@ package service
 
 import "fmt"
 
-//Builder is a simple implementation of ContainerBuilder
+// Builder is a simple implementation of ContainerBuilder.
 type Builder struct {
 	definitions []Definition
 }
 
-//Insert a new definition into the Builder
+// Insert a new definition into the Builder.
 func (b *Builder) Insert(def Definition) {
 	b.definitions = append(b.definitions, def)
 }
 
-//Build builds the container once all definitions have been place in it
-//dependencies need to be inserted in order for now
+// Build creates the container once all definitions have been place in it. Note that
+// dependencies must be inserted in order, for now.
 func (b *Builder) Build() (Container, error) {
 	numDefs := len(b.definitions)
 	servs := make(map[string]interface{}, numDefs)
