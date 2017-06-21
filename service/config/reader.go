@@ -14,12 +14,27 @@ import (
 type Reader struct{}
 
 // Init returns the Config service, which is just a struct containing the data.
+//
+// If a key "config_file" is present in conf, its value will be used as a custom
+// path to the user-provided configuration file. If the value is invalid, an error
+// is returned. Otherwise, the user config path defaults to "config/config.json"
 func (r Reader) Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
-	return parseConfig()
+	configVal, ok := conf["config_file"]
+	if !ok {
+		return parseConfig("config/config.json")
+	}
+	configPath, ok := configVal.(string)
+	if !ok {
+		return nil, fmt.Errorf("user provided config file path is invalid: string type assertion failed")
+	}
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		return nil, fmt.Errorf("user provided config file does not exist: %s", configPath)
+	}
+	return parseConfig(configPath)
 }
 
 // parseConfig reads the default and user json config files, returning a Config.
-func parseConfig() (*config.Config, error) {
+func parseConfig(userConfig string) (*config.Config, error) {
 	cfgFile, err := ioutil.ReadFile("config/default/config.json")
 	if err != nil {
 		return nil, fmt.Errorf("error reading default config file: %s", err.Error())
@@ -30,7 +45,7 @@ func parseConfig() (*config.Config, error) {
 		return nil, fmt.Errorf("error parsing default config file: %s", err.Error())
 	}
 
-	err = mergeUserConfig(cfg)
+	err = mergeUserConfig(cfg, userConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -38,13 +53,14 @@ func parseConfig() (*config.Config, error) {
 	return cfg, nil
 }
 
-// mergeUserConfig adds the user config.json data to the provided Config.
-func mergeUserConfig(cfg *config.Config) error {
-	if _, err := os.Stat("config/config.json"); os.IsNotExist(err) {
+// mergeUserConfig adds the user config.json data to the provided Config, if it
+// exists.
+func mergeUserConfig(cfg *config.Config, userConfigPath string) error {
+	if _, err := os.Stat(userConfigPath); os.IsNotExist(err) {
 		return nil
 	}
 
-	userCfgFile, err := ioutil.ReadFile("config/config.json")
+	userCfgFile, err := ioutil.ReadFile(userConfigPath)
 	if err != nil {
 		return fmt.Errorf("error reading user config file: %s", err.Error())
 	}
