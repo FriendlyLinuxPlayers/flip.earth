@@ -113,8 +113,12 @@ func (i Initializer) Init(deps map[string]interface{}, conf map[string]interface
 		return nil, fmt.Errorf("html_view: could not find field 'view_dirs' in service configuration")
 	}
 
+	viewDirsStrings, ok := viewDirs.([]string)
+	if !ok {
+		return nil, fmt.Errorf("html_view: 'view_dirs' in service configuration is invalid: []string type assertion failed")
+	}
 	hvf := &HtmlViewFactory{
-		defualtDirs: viewDirs.([]string),
+		defualtDirs: viewDirsStrings,
 	}
 
 	return hvf, nil
