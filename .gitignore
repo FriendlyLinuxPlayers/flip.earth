@@ -25,5 +25,8 @@
 
 # End of https://www.gitignore.io/api/go,visualstudiocode
 
+# LiteIDE build adds the executable to the root of the source tree
+flip.earth
+
 # Ignore config file
 config/config.json
