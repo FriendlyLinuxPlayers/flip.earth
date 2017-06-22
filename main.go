@@ -1,3 +1,7 @@
+// FLiP.Earth is the website for the Friendly Linux Players community.
+//
+// See https://FriendlyLinuxPlayers.org for the live website and
+// https://github.com/FriendlyLinuxPlayers/flip.earth for the code.
 package main
 
 import (
