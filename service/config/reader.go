@@ -9,16 +9,12 @@ import (
 	"github.com/friendlylinuxplayers/flip.earth/config"
 )
 
-// Reader implements the Initializer interface for getting the application
-// configuration. It cannot be rebuilt or changed after it is first used.
-type Reader struct{}
-
 // Init returns the Config service, which is just a struct containing the data.
 //
 // If a key "config_file" is present in conf, its value will be used as a custom
 // path to the user-provided configuration file. If the value is invalid, an error
 // is returned. Otherwise, the user config path defaults to "config/config.json"
-func (r Reader) Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
+func Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
 	configVal, ok := conf["config_file"]
 	if !ok {
 		return parseConfig("config/config.json")

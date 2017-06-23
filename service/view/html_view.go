@@ -102,12 +102,8 @@ func parseDirs(dirs []string) ([]string, error) {
 	return paths, nil
 }
 
-// Initializer implements the Intializer interface for HtmlView.
-type Initializer struct {
-}
-
-// Init
-func (i Initializer) Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
+// Init initalzes the yview factory
+func Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
 	viewDirs, ok := conf["view_dirs"]
 	if !ok {
 		return nil, fmt.Errorf("html_view: could not find field 'view_dirs' in service configuration")

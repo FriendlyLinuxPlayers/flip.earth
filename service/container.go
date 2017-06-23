@@ -23,17 +23,12 @@ type Definition struct {
 	Configuration map[string]interface{}
 	// Initializer is what actually returns the service, using the Dependencies
 	// and Configuration.
-	Initializer Initializer
+	Init Initializer
 }
 
-// Initializer is the interface to be implemented by anything that wants to return a
+// Initializer is the function to be provided by anything that wants to return a
 // service.
-type Initializer interface {
-	// Init should be passed a string-indexed (the strings being the service names) map of fully working services
-	// and the configuration as found in the Definition struct of the service. If the service can be successfully initialized
-	// it should be returned, in case of an error during initialization an error is returned
-	Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error)
-}
+type Initializer func(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error)
 
 // ContainerBuilder builds the service container by having service Definitions
 // inserted into it and the build method called.
