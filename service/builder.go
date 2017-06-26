@@ -29,7 +29,7 @@ func (b *Builder) Build() (Container, error) {
 			}
 			deps[name] = dep
 		}
-		service, err := def.Initializer.Init(deps, def.Configuration)
+		service, err := def.Init(deps, def.Configuration)
 		if err != nil {
 			return nil, err
 		}

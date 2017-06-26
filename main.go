@@ -18,8 +18,8 @@ import (
 func main() {
 	b := new(service.Builder)
 	configDef := service.Definition{
-		Name:        "config",
-		Initializer: cs.Reader{},
+		Name: "config",
+		Init: cs.Init,
 	}
 	b.Insert(configDef)
 	container, error := b.Build()
