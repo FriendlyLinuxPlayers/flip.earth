@@ -12,8 +12,10 @@ import (
 // Init returns the Config service, which is just a struct containing the data.
 //
 // If a key "config_file" is present in conf, its value will be used as a custom
-// path to the user-provided configuration file. If the value is invalid, an error
-// is returned. Otherwise, the user config path defaults to "config/config.json"
+// path to the user-provided configuration file. A value of "" (an empty string)
+// indicates that only the default configuration should be used. If the value is
+// invalid, an error is returned. Otherwise, the user config path defaults to
+// "config/config.json"
 func Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
 	configVal, ok := conf["config_file"]
 	if !ok {
@@ -22,6 +24,9 @@ func Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}
 	configPath, ok := configVal.(string)
 	if !ok {
 		return nil, fmt.Errorf("user provided config file path is invalid: string type assertion failed")
+	}
+	if configPath == "" {
+		return parseConfig("")
 	}
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		return nil, fmt.Errorf("user provided config file does not exist: %s", configPath)
