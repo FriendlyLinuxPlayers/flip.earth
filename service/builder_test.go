@@ -22,6 +22,8 @@ func TestBuilder(t *testing.T) {
 		Configuration: map[string]interface{}{"config": 1},
 		Init:          fakeInit,
 	}
+	missingInitErrorMsg := "service: Definitions must have an Initializer function."
+	nilDefinitionMsg := "service: Definitions can not be nil"
 	wrongDepsErrorMsg := "service: Could not find dependency \"dep service\" for service \"service\". Please make sure to insert them in order"
 	// TODO add error checking function to Builder so that this isn't needed
 
@@ -41,25 +43,6 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 	// TODO Test every possible combination of fields initialized in a Definition.
-	t.Run("BuildEmpty", func(t *testing.T) {
-		b := Builder{}
-		_, err := b.Build()
-		if err != nil {
-			t.Errorf("Encountered an error: " + err.Error())
-		}
-	})
-	t.Run("BuildUninitDef", func(t *testing.T) {
-		// This causes a panic right now. Need to adjust the tests to only
-		// add Definitions that would be valid (as they would be through
-		// Insert).
-		b := Builder{
-			definitions: []Definition{emptyDef},
-		}
-		_, err := b.Build()
-		if err != nil {
-			t.Errorf("Encountered an error: " + err.Error())
-		}
-	})
 	t.Run("BuildInitDef1", func(t *testing.T) {
 		b := Builder{
 			definitions: []Definition{dependencyDef},
@@ -99,6 +82,28 @@ func TestBuilder(t *testing.T) {
 			t.Errorf("Did not return an error when there were unmet dependencies (wrong order).")
 		}
 		if err.Error() != wrongDepsErrorMsg {
+			t.Errorf("Encountered an error: " + err.Error())
+		}
+	})
+	t.Run("BuildEmpty", func(t *testing.T) {
+		b := Builder{}
+		_, err := b.Build()
+		if err == nil {
+			t.Errorf("Did not return an error when no Definitions are present.")
+		}
+		if err.Error() != nilDefinitionMsg {
+			t.Errorf("Encountered an error: " + err.Error())
+		}
+	})
+	t.Run("BuildUninitDef", func(t *testing.T) {
+		b := Builder{
+			definitions: []Definition{emptyDef},
+		}
+		_, err := b.Build()
+		if err == nil {
+			t.Errorf("Did not return an error when given an empty Definition.")
+		}
+		if err.Error() != missingInitErrorMsg {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})

@@ -43,6 +43,9 @@ func (b *Builder) Build() (Container, error) {
 			def.Configuration = make(map[string]interface{}, 0)
 		}
 
+		if def.Init == nil {
+			return nil, fmt.Errorf("service: Definitions must have an Initializer function.")
+		}
 		service, err := def.Init(deps, def.Configuration)
 		if err != nil {
 			return nil, err
