@@ -38,6 +38,9 @@ Change things in config.json until perfection is reached.
 
 ## Help and Contributing
 
+By participating in this community, you agree to abide by the terms of our
+[Code of Conduct](https://friendlylinuxplayers.org/conduct).
+
 If you have a bug to report, a feature request, or the desire to otherwise
 contribute, you may either submit an
 [issue on GitHub](https://github.com/FriendlyLinuxPlayers/flip.earth/issues)
