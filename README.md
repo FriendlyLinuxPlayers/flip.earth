@@ -39,13 +39,14 @@ Change things in config.json until perfection is reached.
 ## Help and Contributing
 
 By participating in this community, you agree to abide by the terms of our
-[Code of Conduct](https://friendlylinuxplayers.org/conduct).
+[Code of Conduct](https://FriendlyLinuxPlayers.org/conduct).
 
 If you have a bug to report, a feature request, or the desire to otherwise
 contribute, you may either submit an
-[issue on GitHub](https://github.com/FriendlyLinuxPlayers/flip.earth/issues)
-or join us in the [Matrix](https://matrix.org) room for our website, at
-[#website:flip.earth](https://matrix.to/#/#website:flip.earth).
+[issue on GitHub](https://github.com/FriendlyLinuxPlayers/flip.earth/issues) or
+join us in the [Matrix](https://matrix.org) room for our website, at
+[#website:flip.earth](https://matrix.to/#/#website:flip.earth) (our web client
+is available [here](https://riot.flip.earth/#/room/#website:flip.earth)).
 
 For fixes that pass all tests, pull requests are accepted, but to avoid any
 wasted effort, please contact us before submitting a pull request with other
