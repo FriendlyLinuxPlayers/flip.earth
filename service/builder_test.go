@@ -2,10 +2,10 @@ package service
 
 import "testing"
 
-func fakeInit(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
+func fakeInit(deps, conf map[string]interface{}) (interface{}, error) {
 	return "fakeInit", nil
 }
-func fakeDep(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
+func fakeDep(deps, conf map[string]interface{}) (interface{}, error) {
 	return "fakeDep", nil
 }
 

@@ -103,7 +103,7 @@ func parseDirs(dirs []string) ([]string, error) {
 }
 
 // Init initalzes the yview factory
-func Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
+func Init(deps, conf map[string]interface{}) (interface{}, error) {
 	viewDirs, ok := conf["view_dirs"]
 	if !ok {
 		return nil, fmt.Errorf("html_view: could not find field 'view_dirs' in service configuration")

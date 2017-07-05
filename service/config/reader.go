@@ -16,7 +16,7 @@ import (
 // indicates that only the default configuration should be used. If the value is
 // invalid, an error is returned. Otherwise, the user config path defaults to
 // "config/config.json"
-func Init(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error) {
+func Init(deps, conf map[string]interface{}) (interface{}, error) {
 	configVal, ok := conf["config_file"]
 	if !ok {
 		return parseConfig("config/config.json")

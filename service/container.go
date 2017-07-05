@@ -28,7 +28,7 @@ type Definition struct {
 
 // Initializer is the function to be provided by anything that wants to return a
 // service.
-type Initializer func(deps map[string]interface{}, conf map[string]interface{}) (interface{}, error)
+type Initializer func(deps, conf map[string]interface{}) (interface{}, error)
 
 // ContainerBuilder builds the service container by having service Definitions
 // inserted into it and the build method called.
