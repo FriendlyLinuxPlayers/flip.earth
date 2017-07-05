@@ -1,10 +1,10 @@
 package service
 
-// Container is the basic interface which is to be implemented by anything providing
-// a service container.
+// Container is the basic interface which is to be implemented by anything
+// providing a service container.
 type Container interface {
-	// Get should return the service which corresponds to the given name. If the
-	// service doesn't exist, there should be an error returned.
+	// Get should return the service which corresponds to the given name. If
+	// the service doesn't exist, there should be an error returned.
 	Get(name string) (interface{}, error)
 	// Has should return true if a service with the given name exists, false
 	// otherwise.
@@ -12,8 +12,11 @@ type Container interface {
 }
 
 // Definition contains the metadata and Initializer required to use a service.
+// All valid Definitions require the Name and Init fields, the rest are
+// optional.
 type Definition struct {
 	// Name is what the service should be referred to in the Container.
+	// Leading and trailing whitespace will be trimmed.
 	Name string
 	// Dependencies contains the Names of the other services this service
 	// dependends on.
@@ -21,8 +24,8 @@ type Definition struct {
 	// Configuration stores the service settings. It can have basically any
 	// structure.
 	Configuration map[string]interface{}
-	// Initializer is what actually returns the service, using the Dependencies
-	// and Configuration.
+	// Init is what actually returns the service, using the Dependencies and
+	// Configuration.
 	Init Initializer
 }
 
@@ -30,7 +33,7 @@ type Definition struct {
 // service.
 type Initializer func(deps, conf map[string]interface{}) (interface{}, error)
 
-// ContainerBuilder builds the service container by having service Definitions
+// ContainerBuilder builds the service Container by having service Definitions
 // inserted into it and the build method called.
 type ContainerBuilder interface {
 	// Insert inserts a service Definition.

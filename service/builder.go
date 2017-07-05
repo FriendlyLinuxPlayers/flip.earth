@@ -15,8 +15,8 @@ func (b *Builder) Insert(def Definition) {
 	b.definitions = append(b.definitions, def)
 }
 
-// Build creates the container once all definitions have been place in it. Note that
-// dependencies must be inserted in order, for now.
+// Build creates the container once all definitions have been place in it. Note
+// that dependencies must be inserted in order, for now.
 func (b *Builder) Build() (Container, error) {
 	if b.definitions == nil {
 		return nil, fmt.Errorf("service: Definitions can not be nil")

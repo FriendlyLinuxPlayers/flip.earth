@@ -34,7 +34,7 @@ Then build the project:
 
 # Configure
 
-Change things in config.json until perfection is reached.
+Change things in config/config.json until perfection is reached.
 
 ## Help and Contributing
 

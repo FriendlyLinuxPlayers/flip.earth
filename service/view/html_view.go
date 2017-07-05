@@ -78,7 +78,8 @@ func (hvs *HtmlViewFactory) New() (*HtmlView, error) {
 
 }
 
-// parseDirs converts defaultDirs into paths acceptable for usage in an HtmlView.
+// parseDirs converts defaultDirs into paths acceptable for usage in an
+// HtmlView.
 func parseDirs(dirs []string) ([]string, error) {
 	var paths []string
 	for i := 0; i < len(dirs); i++ {

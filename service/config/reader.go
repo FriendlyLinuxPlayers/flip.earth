@@ -9,7 +9,7 @@ import (
 	"github.com/friendlylinuxplayers/flip.earth/config"
 )
 
-// Init returns the Config service, which is just a struct containing the data.
+// Init returns the Config service, a struct containing the parsed data.
 //
 // If a key "config_file" is present in conf, its value will be used as a custom
 // path to the user-provided configuration file. A value of "" (an empty string)
@@ -54,7 +54,7 @@ func parseConfig(userConfig string) (*config.Config, error) {
 	return cfg, nil
 }
 
-// mergeUserConfig adds the user config.json data to the provided Config, if it
+// mergeUserConfig adds the user json config data to the provided Config, if it
 // exists.
 func mergeUserConfig(cfg *config.Config, userConfigPath string) error {
 	if _, err := os.Stat(userConfigPath); os.IsNotExist(err) {
