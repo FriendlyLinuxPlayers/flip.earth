@@ -50,7 +50,6 @@ func Init(deps, conf map[string]interface{}) (interface{}, error) {
 		if !os.IsPathSeparator(configPath[0]) {
 			configPath = prefixDir + configPath
 		}
-
 	}
 	return parseConfig(configPath, prefixDir)
 }

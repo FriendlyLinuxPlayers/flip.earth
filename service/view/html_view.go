@@ -89,7 +89,7 @@ func parseDirs(dirs []string) ([]string, error) {
 	return paths, nil
 }
 
-// Init initalzes and return a constructor function for new *HTMLViews
+// Init initializes and returns a constructor function for new *HTMLViews
 func Init(deps, conf map[string]interface{}) (func() (*HTMLView, error), error) {
 	viewDirs, ok := conf["view_dirs"]
 	if !ok {
