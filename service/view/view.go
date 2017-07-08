@@ -14,8 +14,5 @@ type View interface {
 	AddTpls(paths ...string) error
 }
 
-// ViewFactory is the interface for creating an initialized View.
-type ViewFactory interface {
-	// New returns an initialized View
-	New() (View, error)
-}
+// New is a function type that returns a new, initalized view
+type New func() (*View, error)

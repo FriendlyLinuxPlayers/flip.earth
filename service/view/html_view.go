@@ -3,24 +3,24 @@ package view
 import (
 	"fmt"
 	"html/template"
-	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 )
 
-// HtmlView implements View for rendering in html.
-type HtmlView struct {
+// HTMLView implements View for rendering in html.
+type HTMLView struct {
 	paths   []string
 	viewBag map[string]interface{}
 }
 
-// Assign
-func (hv *HtmlView) Assign(name string, value interface{}) {
+// Assign assigns avalue to the view which can reached under the given name
+func (hv *HTMLView) Assign(name string, value interface{}) {
 	hv.viewBag[name] = value
 }
 
-// Render
-func (hv *HtmlView) Render(tplName string, to io.Writer) error {
+// Render renders the view to a http.ResponseWriter and sets the Content-Type header accordingly
+func (hv *HTMLView) Render(tplName string, to http.ResponseWriter) error {
 	//make the paths unique
 	uniqPaths := make([]string, 0, len(hv.paths))
 	found := make(map[string]bool)
@@ -35,6 +35,8 @@ func (hv *HtmlView) Render(tplName string, to io.Writer) error {
 	if err != nil {
 		return err
 	}
+
+	to.Header().Set("Content-Type", "text/html; charset=utf-8")
 	err = tpl.ExecuteTemplate(to, tplName, hv.viewBag)
 	if err != nil {
 		return err
@@ -43,8 +45,10 @@ func (hv *HtmlView) Render(tplName string, to io.Writer) error {
 	return nil
 }
 
-// AddTplDirs
-func (hv *HtmlView) AddTplDirs(paths ...string) error {
+// AddTplDirs adds multiple directories to the view which will then be parsed
+// and the templates files within will be added to the view hierarchy.
+// Please keep in mind that this parsing is expensive
+func (hv *HTMLView) AddTplDirs(paths ...string) error {
 	p, err := parseDirs(paths)
 	if err != nil {
 		return err
@@ -54,32 +58,14 @@ func (hv *HtmlView) AddTplDirs(paths ...string) error {
 	return nil
 }
 
-// AddTpls
-func (hv *HtmlView) AddTpls(paths ...string) error {
+// AddTpls adds template files to the view hierarchy
+func (hv *HTMLView) AddTpls(paths ...string) error {
 	hv.paths = append(hv.paths, paths...)
 	return nil
 }
 
-// HtmlViewFactory implements ViewFactory for creating HtmlViews.
-type HtmlViewFactory struct {
-	defualtDirs []string
-}
-
-// New returns an initialized HtmlView.
-func (hvs *HtmlViewFactory) New() (*HtmlView, error) {
-	paths, err := parseDirs(hvs.defualtDirs)
-	if err != nil {
-		return nil, err
-	}
-
-	return &HtmlView{
-		paths: paths,
-	}, nil
-
-}
-
 // parseDirs converts defaultDirs into paths acceptable for usage in an
-// HtmlView.
+// HTMLView.
 func parseDirs(dirs []string) ([]string, error) {
 	var paths []string
 	for i := 0; i < len(dirs); i++ {
@@ -103,8 +89,8 @@ func parseDirs(dirs []string) ([]string, error) {
 	return paths, nil
 }
 
-// Init initalzes the yview factory
-func Init(deps, conf map[string]interface{}) (interface{}, error) {
+// Init initalzes and return a constructor function for new *HTMLViews
+func Init(deps, conf map[string]interface{}) (func() (*HTMLView, error), error) {
 	viewDirs, ok := conf["view_dirs"]
 	if !ok {
 		return nil, fmt.Errorf("html_view: could not find field 'view_dirs' in service configuration")
@@ -114,8 +100,16 @@ func Init(deps, conf map[string]interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("html_view: 'view_dirs' in service configuration is invalid: []string type assertion failed")
 	}
-	hvf := &HtmlViewFactory{
-		defualtDirs: viewDirsStrings,
+
+	hvf := func() (*HTMLView, error) {
+		paths, err := parseDirs(viewDirsStrings)
+		if err != nil {
+			return nil, err
+		}
+
+		return &HTMLView{
+			paths: paths,
+		}, nil
 	}
 
 	return hvf, nil
