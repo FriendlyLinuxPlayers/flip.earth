@@ -24,9 +24,11 @@ func TestSimpleContainer(t *testing.T) {
 		if err == nil {
 			t.Errorf("Unexpectedly returned a service: %s", s)
 		}
-		if !IsNotPresent(err) {
-			t.Errorf("Encountered an error: " + err.Error())
+		switch err.(type) {
+		case *MissingServiceError:
+			t.SkipNow()
 		}
+		t.Errorf("Encountered an error: " + err.Error())
 	})
 	t.Run("HasValid", func(t *testing.T) {
 		if !sc.Has("service") {

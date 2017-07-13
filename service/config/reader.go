@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -27,24 +26,24 @@ import (
 func Init(deps, conf map[string]interface{}) (interface{}, error) {
 	configPath, ok := valToString(conf["config_file"], "config/config.json")
 	if !ok {
-		return nil, fmt.Errorf("user provided config_file path is invalid: string type assertion failed")
+		return nil, &ErrorPathInvalid{Cause: TypeAssert}
 	}
 	prefixDir, ok := valToString(conf["working_dir"], "")
 	if !ok {
-		return nil, fmt.Errorf("user provided working_dir path is invalid: string type assertion failed")
+		return nil, &ErrorDirInvalid{Cause: TypeAssert}
 	}
 	if prefixDir != "" {
 		dirInfo, err := os.Stat(prefixDir)
 		if os.IsNotExist(err) {
-			return nil, fmt.Errorf("user provided working dir does not exist: %s", prefixDir)
+			return nil, &ErrorDirInvalid{prefixDir, NotExist, err}
 		}
 		if !dirInfo.IsDir() {
-			return nil, fmt.Errorf("user provided working dir is not a directory: %s", prefixDir)
+			return nil, &ErrorDirInvalid{prefixDir, NotDir, nil}
 		}
 	}
 	if configPath != "" && configPath != "config/config.json" {
 		if _, err := os.Stat(configPath); os.IsNotExist(err) {
-			return nil, fmt.Errorf("user provided config file does not exist: %s", configPath)
+			return nil, &ErrorPathInvalid{configPath, NotExist, err}
 		}
 		// If configPath is relative, append it to prefixDir
 		if !os.IsPathSeparator(configPath[0]) {
@@ -66,14 +65,15 @@ func valToString(value interface{}, def string) (string, bool) {
 
 // parseConfig reads the default and user json config files, returning a Config.
 func parseConfig(userConfig, relPrefix string) (*config.Config, error) {
-	cfgFile, err := ioutil.ReadFile(relPrefix + "config/default/config.json")
+	cPath := relPrefix + "config/default/config.json"
+	cfgFile, err := ioutil.ReadFile(cPath)
 	if err != nil {
-		return nil, fmt.Errorf("error reading default config file: %s", err.Error())
+		return nil, &ErrorParse{cPath, true, true, err}
 	}
 	cfg := new(config.Config)
 	err = json.Unmarshal(cfgFile, cfg)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing default config file: %s", err.Error())
+		return nil, &ErrorParse{cPath, true, false, err}
 	}
 
 	err = mergeUserConfig(cfg, userConfig)
@@ -93,12 +93,12 @@ func mergeUserConfig(cfg *config.Config, userConfigPath string) error {
 
 	userCfgFile, err := ioutil.ReadFile(userConfigPath)
 	if err != nil {
-		return fmt.Errorf("error reading user config file: %s", err.Error())
+		return &ErrorParse{userConfigPath, false, true, err}
 	}
 
 	err = json.Unmarshal(userCfgFile, cfg)
 	if err != nil {
-		return fmt.Errorf("error parsing user config file: %s", err.Error())
+		return &ErrorParse{userConfigPath, false, false, err}
 	}
 
 	return nil

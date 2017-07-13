@@ -1,9 +1,6 @@
 package service
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 // Builder is a simple implementation of ContainerBuilder.
 type Builder struct {
@@ -19,7 +16,7 @@ func (b *Builder) Insert(def Definition) {
 // that dependencies must be inserted in order, for now.
 func (b *Builder) Build() (Container, error) {
 	if b.definitions == nil {
-		return nil, fmt.Errorf("service: Definitions can not be nil")
+		return nil, ErrNilDef
 	}
 	numDefs := len(b.definitions)
 	servs := make(map[string]interface{}, numDefs)
@@ -32,9 +29,7 @@ func (b *Builder) Build() (Container, error) {
 		for _, name := range def.Dependencies {
 			dep, ok := servs[name]
 			if !ok {
-				return nil, fmt.Errorf("service: Could not find "+
-					"dependency %q for service %q. Please make "+
-					"sure to insert them in order", name, def.Name)
+				return nil, &MissingDepError{name, def.Name}
 			}
 			deps[name] = dep
 		}
@@ -44,7 +39,7 @@ func (b *Builder) Build() (Container, error) {
 		}
 
 		if def.Init == nil {
-			return nil, fmt.Errorf("service: Definitions must have an Initializer function.")
+			return nil, ErrDefNilInit
 		}
 		service, err := def.Init(deps, def.Configuration)
 		if err != nil {
@@ -53,7 +48,7 @@ func (b *Builder) Build() (Container, error) {
 
 		def.Name = strings.TrimSpace(def.Name)
 		if def.Name == "" {
-			return nil, fmt.Errorf("service: service name must be non-empty and not whitespace only")
+			return nil, ErrDefEmptyName
 		}
 
 		servs[def.Name] = service

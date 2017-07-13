@@ -22,9 +22,6 @@ func TestBuilder(t *testing.T) {
 		Configuration: map[string]interface{}{"config": 1},
 		Init:          fakeInit,
 	}
-	missingInitErrorMsg := "service: Definitions must have an Initializer function."
-	nilDefinitionMsg := "service: Definitions can not be nil"
-	wrongDepsErrorMsg := "service: Could not find dependency \"dep service\" for service \"service\". Please make sure to insert them in order"
 	// TODO add error checking function to Builder so that this isn't needed
 
 	t.Run("Insert1", func(t *testing.T) {
@@ -69,9 +66,11 @@ func TestBuilder(t *testing.T) {
 		if err == nil {
 			t.Errorf("Did not return an error when there were unmet dependencies (not present).")
 		}
-		if err.Error() != wrongDepsErrorMsg {
-			t.Errorf("Encountered an error: " + err.Error())
+		switch err.(type) {
+		case *MissingDepError:
+			t.SkipNow()
 		}
+		t.Errorf("Encountered an error: " + err.Error())
 	})
 	t.Run("BuildInitInvalidDef2", func(t *testing.T) {
 		b := Builder{
@@ -81,9 +80,11 @@ func TestBuilder(t *testing.T) {
 		if err == nil {
 			t.Errorf("Did not return an error when there were unmet dependencies (wrong order).")
 		}
-		if err.Error() != wrongDepsErrorMsg {
-			t.Errorf("Encountered an error: " + err.Error())
+		switch err.(type) {
+		case *MissingDepError:
+			t.SkipNow()
 		}
+		t.Errorf("Encountered an error: " + err.Error())
 	})
 	t.Run("BuildEmpty", func(t *testing.T) {
 		b := Builder{}
@@ -91,7 +92,7 @@ func TestBuilder(t *testing.T) {
 		if err == nil {
 			t.Errorf("Did not return an error when no Definitions are present.")
 		}
-		if err.Error() != nilDefinitionMsg {
+		if err != ErrNilDef {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})
@@ -103,7 +104,7 @@ func TestBuilder(t *testing.T) {
 		if err == nil {
 			t.Errorf("Did not return an error when given an empty Definition.")
 		}
-		if err.Error() != missingInitErrorMsg {
+		if err != ErrDefNilInit {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})

@@ -1,11 +1,16 @@
 package view
 
 import (
-	"fmt"
+	"errors"
 	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
+)
+
+var (
+	ErrNoViewDirs      = errors.New("html_view: could not find field 'view_dirs' in service configuration")
+	ErrInvalidViewDirs = errors.New("html_view: 'view_dirs' in service configuration is invalid: []string type assertion failed")
 )
 
 // HTMLView implements View for rendering in html.
@@ -93,12 +98,12 @@ func parseDirs(dirs []string) ([]string, error) {
 func Init(deps, conf map[string]interface{}) (func() (*HTMLView, error), error) {
 	viewDirs, ok := conf["view_dirs"]
 	if !ok {
-		return nil, fmt.Errorf("html_view: could not find field 'view_dirs' in service configuration")
+		return nil, ErrNoViewDirs
 	}
 
 	viewDirsStrings, ok := viewDirs.([]string)
 	if !ok {
-		return nil, fmt.Errorf("html_view: 'view_dirs' in service configuration is invalid: []string type assertion failed")
+		return nil, ErrInvalidViewDirs
 	}
 
 	hvf := func() (*HTMLView, error) {
