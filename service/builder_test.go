@@ -67,7 +67,7 @@ func TestBuilder(t *testing.T) {
 		}
 		switch err.(type) {
 		case *MissingDepError:
-			t.SkipNow()
+			return
 		}
 		t.Errorf("Encountered an error: " + err.Error())
 	})
@@ -81,7 +81,7 @@ func TestBuilder(t *testing.T) {
 		}
 		switch err.(type) {
 		case *MissingDepError:
-			t.SkipNow()
+			return
 		}
 		t.Errorf("Encountered an error: " + err.Error())
 	})

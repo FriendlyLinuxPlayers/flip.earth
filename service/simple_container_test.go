@@ -26,7 +26,7 @@ func TestSimpleContainer(t *testing.T) {
 		}
 		switch err.(type) {
 		case *MissingServiceError:
-			t.SkipNow()
+			return
 		}
 		t.Errorf("Encountered an error: " + err.Error())
 	})
