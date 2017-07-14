@@ -22,7 +22,6 @@ func TestBuilder(t *testing.T) {
 		Configuration: map[string]interface{}{"config": 1},
 		Init:          fakeInit,
 	}
-	// TODO add error checking function to Builder so that this isn't needed
 
 	t.Run("Insert1", func(t *testing.T) {
 		b := Builder{}
