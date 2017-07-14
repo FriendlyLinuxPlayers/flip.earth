@@ -27,7 +27,7 @@ func TestBuilder(t *testing.T) {
 		b := Builder{}
 		b.Insert(emptyDef)
 		if len(b.definitions) != 1 {
-			t.Errorf("Incorrect number of definitions")
+			t.Errorf("Incorrect number of definitions. Expected: %d Result: %d", 1, len(b.definitions))
 		}
 	})
 	t.Run("Insert2", func(t *testing.T) {
@@ -35,7 +35,7 @@ func TestBuilder(t *testing.T) {
 		b.Insert(emptyDef)
 		b.Insert(emptyDef)
 		if len(b.definitions) != 2 {
-			t.Errorf("Incorrect number of definitions")
+			t.Errorf("Incorrect number of definitions. Expected: %d Result: %d", 2, len(b.definitions))
 		}
 	})
 	// TODO Test every possible combination of fields initialized in a Definition.
@@ -91,7 +91,7 @@ func TestBuilder(t *testing.T) {
 		if err == nil {
 			t.Errorf("Did not return an error when no Definitions are present.")
 		}
-		if err != ErrNilDef {
+		if err != ErrNilDefs {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})

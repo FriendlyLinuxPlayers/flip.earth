@@ -16,7 +16,7 @@ func (b *Builder) Insert(def Definition) {
 // that dependencies must be inserted in order, for now.
 func (b *Builder) Build() (Container, error) {
 	if b.definitions == nil {
-		return nil, ErrNilDef
+		return nil, ErrNilDefs
 	}
 	numDefs := len(b.definitions)
 	servs := make(map[string]interface{}, numDefs)

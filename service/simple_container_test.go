@@ -16,13 +16,13 @@ func TestSimpleContainer(t *testing.T) {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 		if s != serviceMap["service"] {
-			t.Errorf("Returned service has the wrong value.")
+			t.Errorf("Returned service has the wrong value: %+v", serviceMap["service"])
 		}
 	})
 	t.Run("GetInvalid", func(t *testing.T) {
 		s, err := sc.Get("not a service")
 		if err == nil {
-			t.Errorf("Unexpectedly returned a service: %s", s)
+			t.Errorf("Unexpectedly returned a service: %+v", s)
 		}
 		switch err.(type) {
 		case *MissingServiceError:
@@ -32,12 +32,12 @@ func TestSimpleContainer(t *testing.T) {
 	})
 	t.Run("HasValid", func(t *testing.T) {
 		if !sc.Has("service") {
-			t.Errorf("Does not have an expected service.")
+			t.Errorf("Does not have an expected service: %q", "service")
 		}
 	})
 	t.Run("HasInvalid", func(t *testing.T) {
 		if sc.Has("not a service") {
-			t.Errorf("Unexpectedly has a service.")
+			t.Errorf("Unexpectedly has a service: %q", "not a service")
 		}
 	})
 }

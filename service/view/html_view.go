@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	ErrNoViewDirs      = errors.New("html_view: could not find field 'view_dirs' in service configuration")
-	ErrInvalidViewDirs = errors.New("html_view: 'view_dirs' in service configuration is invalid: []string type assertion failed")
+	ErrNoViewDirs      = errors.New("html_view: could not find field \"view_dirs\" in service configuration")
+	ErrInvalidViewDirs = errors.New("html_view: \"view_dirs\" in service configuration is invalid: []string type assertion failed")
 )
 
 // HTMLView implements View for rendering in html.

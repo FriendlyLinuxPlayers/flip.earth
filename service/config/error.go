@@ -34,7 +34,7 @@ type ErrorDirInvalid struct {
 }
 
 func (e *ErrorDirInvalid) Error() string {
-	what := "working_dir"
+	what := "\"working_dir\""
 	why := ""
 	switch e.Cause {
 	case NotDir:
@@ -61,7 +61,7 @@ type ErrorPathInvalid struct {
 }
 
 func (e *ErrorPathInvalid) Error() string {
-	what := "config_path"
+	what := "\"config_path\""
 	why := ""
 	switch e.Cause {
 	case NotExist:

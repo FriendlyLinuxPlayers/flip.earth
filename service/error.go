@@ -7,8 +7,8 @@ import (
 
 var (
 	ErrDefEmptyName      = errors.New("service: service name must be non-empty and not whitespace only")
-	ErrDefNilInit        = errors.New("service: Definitions must have an Initializer function")
-	ErrNilDef            = errors.New("service: Definitions cannot be nil")
+	ErrDefNilInit        = errors.New("service: Definition must have an Initializer function")
+	ErrNilDefs           = errors.New("service: \"definitions\" in ContainerBuilder cannot be nil")
 	missingDepPrefix     = "service: Could not find dependency %q for service %q"
 	missingDepSuffix     = "Please make sure to insert them in order"
 	missingServicePrefix = "service: Container does not have service"
