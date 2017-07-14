@@ -103,7 +103,7 @@ func TestBuilder(t *testing.T) {
 		if err == nil {
 			t.Errorf("Did not return an error when given an empty Definition.")
 		}
-		if err != ErrDefNilInit {
+		if err != ErrDefEmptyName && err != ErrDefNilInit {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})
