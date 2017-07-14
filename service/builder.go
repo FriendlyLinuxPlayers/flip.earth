@@ -1,7 +1,5 @@
 package service
 
-import "strings"
-
 // Builder is a simple implementation of ContainerBuilder.
 type Builder struct {
 	definitions []Definition
@@ -21,6 +19,9 @@ func (b *Builder) Build() (Container, error) {
 	numDefs := len(b.definitions)
 	servs := make(map[string]interface{}, numDefs)
 	for _, def := range b.definitions {
+		if !IsValid(def) {
+			return nil, InvalidReason(def)
+		}
 		if def.Dependencies == nil {
 			def.Dependencies = make([]string, 0)
 		}
@@ -38,17 +39,9 @@ func (b *Builder) Build() (Container, error) {
 			def.Configuration = make(map[string]interface{}, 0)
 		}
 
-		if def.Init == nil {
-			return nil, ErrDefNilInit
-		}
 		service, err := def.Init(deps, def.Configuration)
 		if err != nil {
 			return nil, err
-		}
-
-		def.Name = strings.TrimSpace(def.Name)
-		if def.Name == "" {
-			return nil, ErrDefEmptyName
 		}
 
 		servs[def.Name] = service
