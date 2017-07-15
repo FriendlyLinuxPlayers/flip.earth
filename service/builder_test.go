@@ -26,6 +26,7 @@ func TestBuilder(t *testing.T) {
 	}
 
 	t.Run("Insert1", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{}
 		b.Insert(emptyDef)
 		if len(b.definitions) != 1 {
@@ -33,6 +34,7 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 	t.Run("Insert2", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{}
 		b.Insert(emptyDef)
 		b.Insert(emptyDef)
@@ -42,6 +44,7 @@ func TestBuilder(t *testing.T) {
 	})
 	// TODO Test every possible combination of fields initialized in a Definition.
 	t.Run("BuildInitDef1", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{
 			definitions: []Definition{dependencyDef},
 		}
@@ -51,6 +54,7 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 	t.Run("BuildInitDef2", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{
 			definitions: []Definition{dependencyDef, fullDef},
 		}
@@ -60,6 +64,7 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 	t.Run("BuildInitInvalidDef1", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{
 			definitions: []Definition{fullDef},
 		}
@@ -74,6 +79,7 @@ func TestBuilder(t *testing.T) {
 		t.Errorf("Encountered an error: " + err.Error())
 	})
 	t.Run("BuildInitInvalidDef2", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{
 			definitions: []Definition{fullDef, dependencyDef},
 		}
@@ -88,6 +94,7 @@ func TestBuilder(t *testing.T) {
 		t.Errorf("Encountered an error: " + err.Error())
 	})
 	t.Run("BuildEmpty", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{}
 		_, err := b.Build()
 		if err == nil {
@@ -98,6 +105,7 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 	t.Run("BuildUninitDef", func(t *testing.T) {
+		t.Parallel()
 		b := Builder{
 			definitions: []Definition{emptyDef},
 		}
