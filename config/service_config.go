@@ -11,6 +11,9 @@ type ServiceConfig map[string]interface{}
 func (sc ServiceConfig) Assign(to interface{}) error {
 	t := reflect.TypeOf(to)
 	v := reflect.ValueOf(to)
+	if v.Kind() != reflect.Struct {
+		return fmt.Errorf("TODO implement error type for when interface is not a struct")
+	}
 	fc := t.NumField()
 	for i := 0; i < fc; i++ {
 		tf := t.Field(i)
