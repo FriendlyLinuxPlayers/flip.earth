@@ -1,26 +1,28 @@
 package service
 
-import "testing"
+import (
+	"testing"
 
-func fakeInit(deps, conf map[string]interface{}) (interface{}, error) {
+	"github.com/friendlylinuxplayers/flip.earth/config"
+)
+
+func fakeInit(deps, conf config.ServiceConfig) (interface{}, error) {
 	return "fakeInit", nil
 }
-func fakeDep(deps, conf map[string]interface{}) (interface{}, error) {
+func fakeDep(deps, conf config.ServiceConfig) (interface{}, error) {
 	return "fakeDep", nil
 }
 
 func TestBuilder(t *testing.T) {
 	emptyDef := Definition{}
 	dependencyDef := Definition{
-		Name:          "dep service",
-		Configuration: map[string]interface{}{"config": 1},
-		Init:          fakeDep,
+		Name: "dep service",
+		Init: fakeDep,
 	}
 	fullDef := Definition{
-		Name:          "service",
-		Dependencies:  []string{"dep service"},
-		Configuration: map[string]interface{}{"config": 1},
-		Init:          fakeInit,
+		Name:         "service",
+		Dependencies: []string{"dep service"},
+		Init:         fakeInit,
 	}
 
 	t.Run("Insert1", func(t *testing.T) {

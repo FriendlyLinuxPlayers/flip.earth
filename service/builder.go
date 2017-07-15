@@ -1,8 +1,11 @@
 package service
 
+import "github.com/friendlylinuxplayers/flip.earth/config"
+
 // Builder is a simple implementation of ContainerBuilder.
 type Builder struct {
-	definitions []Definition
+	ServiceConfigs map[string]config.ServiceConfig
+	definitions    []Definition
 }
 
 // Insert a new definition into the Builder.
@@ -34,12 +37,12 @@ func (b *Builder) Build() (Container, error) {
 			}
 			deps[name] = dep
 		}
-
-		if def.Configuration == nil {
-			def.Configuration = make(map[string]interface{}, 0)
+		conf, ok := b.ServiceConfigs[def.Vendor+"."+def.Name]
+		if !ok {
+			conf = config.ServiceConfig{}
 		}
 
-		service, err := def.Init(deps, def.Configuration)
+		service, err := def.Init(deps, conf)
 		if err != nil {
 			return nil, err
 		}
