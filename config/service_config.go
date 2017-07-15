@@ -17,9 +17,8 @@ func (sc ServiceConfig) Assign(to interface{}) error {
 		if tf.Anonymous {
 			continue
 		}
-		name := tf.Name
-		upName := strings.ToUpper(name)
-		if name[0] != upName[0] {
+
+		if !v.CanSet() {
 			continue
 		}
 		tag, ok := tf.Tag.Lookup("servconf")
@@ -69,13 +68,6 @@ func (sc ServiceConfig) handleField(tag string, vf *reflect.Value) error {
 }
 
 func assignValueToField(value interface{}, vf *reflect.Value, required bool) error {
-	if !vf.CanSet() {
-		if required {
-			return fmt.Errorf("TODO implement error type for having a filed that can not be set required")
-		}
-		return nil
-	}
-
 	vsc, ok := value.(ServiceConfig)
 	if ok {
 		//TODO figure out if this mess works
