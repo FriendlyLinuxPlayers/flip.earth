@@ -23,7 +23,7 @@ import (
 // prefix to all relative paths used in locating configuration files. A value of
 // "" indicates that relative paths will remain unchanged, otherwise it must be
 // a valid directory.
-func Init(deps, conf map[string]interface{}) (interface{}, error) {
+func Init(deps, conf config.ServiceConfig) (interface{}, error) {
 	configPath, ok := valToString(conf["config_file"], "config/config.json")
 	if !ok {
 		return nil, &ErrorPathInvalid{Cause: TypeAssert}
