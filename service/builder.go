@@ -13,6 +13,7 @@ func (b *Builder) Insert(def Definition) error {
 	if !IsValid(def) {
 		return InvalidReason(def)
 	}
+	TrimStrings(&def)
 	b.definitions = append(b.definitions, def)
 	return nil
 }

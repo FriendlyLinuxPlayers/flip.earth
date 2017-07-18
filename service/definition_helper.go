@@ -2,6 +2,14 @@ package service
 
 import "strings"
 
+// TrimStrings trims the whitespace from Vendor, Prefix, and Name fields in the
+// given Definition.
+func TrimStrings(d *Definition) {
+	d.Name = strings.TrimSpace(d.Name)
+	d.Prefix = strings.TrimSpace(d.Prefix)
+	d.Vendor = strings.TrimSpace(d.Vendor)
+}
+
 // IsValid returns a boolean indicating if the Definition's fields meet the
 // minimum requirements.
 func IsValid(d Definition) bool {
