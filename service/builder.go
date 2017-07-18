@@ -9,8 +9,12 @@ type Builder struct {
 }
 
 // Insert a new definition into the Builder.
-func (b *Builder) Insert(def Definition) {
+func (b *Builder) Insert(def Definition) error {
+	if !IsValid(def) {
+		return InvalidReason(def)
+	}
 	b.definitions = append(b.definitions, def)
+	return nil
 }
 
 // Build creates the container once all definitions have been place in it. Note
@@ -22,9 +26,6 @@ func (b *Builder) Build() (Container, error) {
 	numDefs := len(b.definitions)
 	servs := make(map[string]interface{}, numDefs)
 	for _, def := range b.definitions {
-		if !IsValid(def) {
-			return nil, InvalidReason(def)
-		}
 		if def.Dependencies == nil {
 			def.Dependencies = make([]string, 0)
 		}

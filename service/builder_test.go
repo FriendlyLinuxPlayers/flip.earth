@@ -32,7 +32,10 @@ func TestBuilder(t *testing.T) {
 	t.Run("Insert1", func(t *testing.T) {
 		t.Parallel()
 		b := Builder{}
-		b.Insert(emptyDef)
+		err := b.Insert(fullDef)
+		if err != nil {
+			t.Errorf("Encountered an error:" + err.Error())
+		}
 		if len(b.definitions) != 1 {
 			t.Errorf("Incorrect number of definitions. Expected: %d Result: %d", 1, len(b.definitions))
 		}
@@ -40,10 +43,27 @@ func TestBuilder(t *testing.T) {
 	t.Run("Insert2", func(t *testing.T) {
 		t.Parallel()
 		b := Builder{}
-		b.Insert(emptyDef)
-		b.Insert(emptyDef)
+		err := b.Insert(dependencyDef)
+		if err != nil {
+			t.Errorf("Encountered an error:" + err.Error())
+		}
+		err = b.Insert(fullDef)
+		if err != nil {
+			t.Errorf("Encountered an error:" + err.Error())
+		}
 		if len(b.definitions) != 2 {
 			t.Errorf("Incorrect number of definitions. Expected: %d Result: %d", 2, len(b.definitions))
+		}
+	})
+	t.Run("InsertUninitDef", func(t *testing.T) {
+		t.Parallel()
+		b := Builder{}
+		err := b.Insert(emptyDef)
+		if err == nil {
+			t.Errorf("Did not return an error when given an empty Definition.")
+		}
+		if err != ErrDefEmptyName && err != ErrDefEmptyPrefix && err != ErrDefEmptyVendor && err != ErrDefNilInit {
+			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})
 	// TODO Test every possible combination of fields initialized in a Definition.
@@ -105,19 +125,6 @@ func TestBuilder(t *testing.T) {
 			t.Errorf("Did not return an error when no Definitions are present.")
 		}
 		if err != ErrNilDefs {
-			t.Errorf("Encountered an error: " + err.Error())
-		}
-	})
-	t.Run("BuildUninitDef", func(t *testing.T) {
-		t.Parallel()
-		b := Builder{
-			definitions: []Definition{emptyDef},
-		}
-		_, err := b.Build()
-		if err == nil {
-			t.Errorf("Did not return an error when given an empty Definition.")
-		}
-		if err != ErrDefEmptyName && err != ErrDefEmptyPrefix && err != ErrDefEmptyVendor && err != ErrDefNilInit {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})
