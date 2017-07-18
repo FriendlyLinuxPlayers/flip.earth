@@ -67,7 +67,7 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 	// TODO Test every possible combination of fields initialized in a Definition.
-	t.Run("BuildInitDef1", func(t *testing.T) {
+	t.Run("Build1", func(t *testing.T) {
 		t.Parallel()
 		b := Builder{
 			definitions: []Definition{dependencyDef},
@@ -77,7 +77,7 @@ func TestBuilder(t *testing.T) {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})
-	t.Run("BuildInitDef2", func(t *testing.T) {
+	t.Run("Build2", func(t *testing.T) {
 		t.Parallel()
 		b := Builder{
 			definitions: []Definition{dependencyDef, fullDef},
@@ -87,7 +87,7 @@ func TestBuilder(t *testing.T) {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})
-	t.Run("BuildInitInvalidDef1", func(t *testing.T) {
+	t.Run("BuildInvalidDef1", func(t *testing.T) {
 		t.Parallel()
 		b := Builder{
 			definitions: []Definition{fullDef},
@@ -102,7 +102,7 @@ func TestBuilder(t *testing.T) {
 		}
 		t.Errorf("Encountered an error: " + err.Error())
 	})
-	t.Run("BuildInitInvalidDef2", func(t *testing.T) {
+	t.Run("BuildInvalidDef2", func(t *testing.T) {
 		t.Parallel()
 		b := Builder{
 			definitions: []Definition{fullDef, dependencyDef},
