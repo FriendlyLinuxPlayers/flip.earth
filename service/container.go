@@ -17,9 +17,13 @@ type Container interface {
 // All valid Definitions require the Name and Init fields, the rest are
 // optional.
 type Definition struct {
-	//Vendor is the vendor prefix for the service name
-	//the first step torwards service decoration
+	// Vendor is the vendor prefix for the service name.
+	// Leading and trailing whitespace will be trimmed.
+	// This is the first step torwards service decoration.
 	Vendor string
+	// Prefix.
+	// Leading and trailing whitespace will be trimmed.
+	Prefix string
 	// Name is what the service should be referred to in the Container.
 	// Leading and trailing whitespace will be trimmed.
 	Name string

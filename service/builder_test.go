@@ -16,10 +16,14 @@ func fakeDep(deps, conf config.ServiceConfig) (interface{}, error) {
 func TestBuilder(t *testing.T) {
 	emptyDef := Definition{}
 	dependencyDef := Definition{
-		Name: "dep service",
-		Init: fakeDep,
+		Vendor: "flip",
+		Prefix: "test",
+		Name:   "dep service",
+		Init:   fakeDep,
 	}
 	fullDef := Definition{
+		Vendor:       "flip",
+		Prefix:       "test",
 		Name:         "service",
 		Dependencies: []string{"dep service"},
 		Init:         fakeInit,
@@ -113,7 +117,7 @@ func TestBuilder(t *testing.T) {
 		if err == nil {
 			t.Errorf("Did not return an error when given an empty Definition.")
 		}
-		if err != ErrDefEmptyName && err != ErrDefNilInit {
+		if err != ErrDefEmptyName && err != ErrDefEmptyPrefix && err != ErrDefEmptyVendor && err != ErrDefNilInit {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})

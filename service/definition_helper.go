@@ -18,6 +18,14 @@ func InvalidReason(d Definition) error {
 	if name == "" {
 		return ErrDefEmptyName
 	}
+	prefix := strings.TrimSpace(d.Prefix)
+	if prefix == "" {
+		return ErrDefEmptyPrefix
+	}
+	vendor := strings.TrimSpace(d.Vendor)
+	if vendor == "" {
+		return ErrDefEmptyVendor
+	}
 	if d.Init == nil {
 		return ErrDefNilInit
 	}

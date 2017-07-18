@@ -18,8 +18,10 @@ import (
 func main() {
 	b := new(service.Builder)
 	configDef := service.Definition{
-		Name: "config",
-		Init: cs.Init,
+		Vendor: "flip",
+		Prefix: "bootstrap",
+		Name:   "config",
+		Init:   cs.Init,
 	}
 	b.Insert(configDef)
 	container, error := b.Build()

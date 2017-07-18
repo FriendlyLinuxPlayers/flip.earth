@@ -37,7 +37,7 @@ func (b *Builder) Build() (Container, error) {
 			}
 			deps[name] = dep
 		}
-		conf, ok := b.ServiceConfigs[def.Vendor+"."+def.Name]
+		conf, ok := b.ServiceConfigs[def.Vendor+"."+def.Prefix+"."+def.Name]
 		if !ok {
 			conf = config.ServiceConfig{}
 		}
