@@ -39,9 +39,6 @@ func (sc ServiceConfig) Assign(to interface{}) error {
 func (sc ServiceConfig) handleField(tag string, vf *reflect.Value) error {
 	tagVals := strings.Split(tag, ",")
 	tvc := len(tagVals)
-	if tvc < 1 {
-		return fmt.Errorf("TODO implement error type for invalid struct fields")
-	}
 
 	fName := strings.TrimSpace(tagVals[0])
 	if fName == "" {
