@@ -2,7 +2,7 @@ package config
 
 import "fmt"
 
-var (
+const (
 	invalidPrefix    = "user provided %s path is invalid"
 	notExistSuffix   = "does not exist"
 	parseText        = "error in %s%sconfig file"
