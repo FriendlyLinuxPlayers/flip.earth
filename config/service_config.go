@@ -29,7 +29,9 @@ func (sc ServiceConfig) Assign(to interface{}) error {
 			continue
 		}
 		vf := v.Field(i)
-		sc.handleField(tag, &vf)
+		if err := sc.handleField(tag, &vf); err != nil {
+			return err
+		}
 
 	}
 
