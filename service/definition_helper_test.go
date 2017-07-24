@@ -22,73 +22,73 @@ func TestDefinitionHelper(t *testing.T) {
 		Init:   fakeInit,
 	}
 
-	t.Run("InvalidReasonValid", func(t *testing.T) {
+	t.Run("invalidReasonValid", func(t *testing.T) {
 		t.Parallel()
-		if err := InvalidReason(validDef); err != nil {
+		if err := validDef.invalidReason(); err != nil {
 			t.Errorf("Valid Definition unexpectedly returned error: %s", err)
 		}
 	})
-	t.Run("InvalidReasonVendor", func(t *testing.T) {
+	t.Run("invalidReasonVendor", func(t *testing.T) {
 		t.Parallel()
 		def := validDef
 		def.Vendor = ""
-		if err := InvalidReason(def); err != ErrDefEmptyVendor {
+		if err := def.invalidReason(); err != ErrDefEmptyVendor {
 			t.Errorf("Definition returned an unexpected error: %s", err)
 		}
 	})
-	t.Run("InvalidReasonPrefix", func(t *testing.T) {
+	t.Run("invalidReasonPrefix", func(t *testing.T) {
 		t.Parallel()
 		def := validDef
 		def.Prefix = ""
-		if err := InvalidReason(def); err != ErrDefEmptyPrefix {
+		if err := def.invalidReason(); err != ErrDefEmptyPrefix {
 			t.Errorf("Definition returned an unexpected error: %s", err)
 		}
 	})
-	t.Run("InvalidReasonName", func(t *testing.T) {
+	t.Run("invalidReasonName", func(t *testing.T) {
 		t.Parallel()
 		def := validDef
 		def.Name = ""
-		if err := InvalidReason(def); err != ErrDefEmptyName {
+		if err := def.invalidReason(); err != ErrDefEmptyName {
 			t.Errorf("Definition returned an unexpected error: %s", err)
 		}
 	})
-	t.Run("InvalidReasonInit", func(t *testing.T) {
+	t.Run("invalidReasonInit", func(t *testing.T) {
 		t.Parallel()
 		def := validDef
 		def.Init = nil
-		if err := InvalidReason(def); err != ErrDefNilInit {
+		if err := def.invalidReason(); err != ErrDefNilInit {
 			t.Errorf("Definition returned an unexpected error: %s", err)
 		}
 	})
-	t.Run("InvalidReasonWhitespace", func(t *testing.T) {
+	t.Run("invalidReasonWhitespace", func(t *testing.T) {
 		t.Parallel()
-		err := InvalidReason(invalidWSDef)
+		err := invalidWSDef.invalidReason()
 		if err != ErrDefEmptyVendor && err != ErrDefEmptyPrefix && err != ErrDefEmptyName {
 			t.Errorf("Definition returned an unexpected error: %s", err)
 		}
 	})
-	t.Run("IsValidTrue1", func(t *testing.T) {
+	t.Run("isValidTrue1", func(t *testing.T) {
 		t.Parallel()
-		if !IsValid(validDef) {
+		if !validDef.isValid() {
 			t.Errorf("Valid Definition unexpectedly returned false")
 		}
 	})
-	t.Run("IsValidTrue2", func(t *testing.T) {
+	t.Run("isValidTrue2", func(t *testing.T) {
 		t.Parallel()
-		if !IsValid(validWSDef) {
+		if !validWSDef.isValid() {
 			t.Errorf("Valid Definition unexpectedly returned false")
 		}
 	})
-	t.Run("IsValidFalse", func(t *testing.T) {
+	t.Run("isValidFalse", func(t *testing.T) {
 		t.Parallel()
-		if IsValid(invalidWSDef) {
+		if invalidWSDef.isValid() {
 			t.Errorf("Invalid Definition unexpectedly returned true")
 		}
 	})
-	t.Run("TrimStrings1", func(t *testing.T) {
+	t.Run("trimStrings1", func(t *testing.T) {
 		t.Parallel()
 		def := validDef
-		TrimStrings(&def)
+		def.trimStrings()
 		if def.Vendor != "flip" {
 			t.Errorf("Vendor does not match expected value \"flip\"")
 		}
@@ -99,10 +99,10 @@ func TestDefinitionHelper(t *testing.T) {
 			t.Errorf("Name does not match expected value \"service\"")
 		}
 	})
-	t.Run("TrimStrings2", func(t *testing.T) {
+	t.Run("trimStrings2", func(t *testing.T) {
 		t.Parallel()
 		def := validWSDef
-		TrimStrings(&def)
+		def.trimStrings()
 		if def.Vendor != "flip" {
 			t.Errorf("Vendor does not match expected value \"flip\"")
 		}
@@ -113,10 +113,10 @@ func TestDefinitionHelper(t *testing.T) {
 			t.Errorf("Name does not match expected value \"service\"")
 		}
 	})
-	t.Run("TrimStrings3", func(t *testing.T) {
+	t.Run("trimStrings3", func(t *testing.T) {
 		t.Parallel()
 		def := invalidWSDef
-		TrimStrings(&def)
+		def.trimStrings()
 		if def.Vendor != "" {
 			t.Errorf("Vendor does not match expected value \"\"")
 		}

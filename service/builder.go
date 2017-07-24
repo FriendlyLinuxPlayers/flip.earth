@@ -10,10 +10,10 @@ type Builder struct {
 
 // Insert a new definition into the Builder.
 func (b *Builder) Insert(def Definition) error {
-	if !IsValid(def) {
-		return InvalidReason(def)
+	if !def.isValid() {
+		return def.invalidReason()
 	}
-	TrimStrings(&def)
+	def.trimStrings()
 	b.definitions = append(b.definitions, def)
 	return nil
 }
