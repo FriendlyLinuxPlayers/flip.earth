@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"reflect"
 	"strings"
 )
@@ -12,7 +11,7 @@ func (sc ServiceConfig) Assign(to interface{}) error {
 	t := reflect.TypeOf(to)
 	v := reflect.ValueOf(to)
 	if v.Kind() != reflect.Struct {
-		return fmt.Errorf("TODO implement error type for when interface is not a struct")
+		return ErrNotStruct
 	}
 	fc := t.NumField()
 	for i := 0; i < fc; i++ {
@@ -24,12 +23,11 @@ func (sc ServiceConfig) Assign(to interface{}) error {
 		if !v.CanSet() {
 			continue
 		}
-		tag, ok := tf.Tag.Lookup("servconf")
-		if !ok {
+		if _, ok := tf.Tag.Lookup("servconf"); !ok {
 			continue
 		}
 		vf := v.Field(i)
-		if err := sc.handleField(tag, &vf); err != nil {
+		if err := sc.handleField(&tf, &vf); err != nil {
 			return err
 		}
 
@@ -38,13 +36,13 @@ func (sc ServiceConfig) Assign(to interface{}) error {
 	return nil
 }
 
-func (sc ServiceConfig) handleField(tag string, vf *reflect.Value) error {
-	tagVals := strings.Split(tag, ",")
+func (sc ServiceConfig) handleField(tf *reflect.StructField, vf *reflect.Value) error {
+	tagVals := strings.Split(tf.Tag.Get("servconf"), ",")
 	tvc := len(tagVals)
 
 	fName := strings.TrimSpace(tagVals[0])
 	if fName == "" {
-		return fmt.Errorf("TODO implement error type for empty name field")
+		return &InvalidTagError{tf.Name, ""}
 	}
 
 	value, ok := sc[fName]
@@ -57,7 +55,7 @@ func (sc ServiceConfig) handleField(tag string, vf *reflect.Value) error {
 
 	if !ok {
 		if required {
-			return fmt.Errorf("TODO implement error type for missing required field")
+			return &InvalidTagError{tf.Name, fName}
 		}
 	} else {
 		if err := assignValueToField(value, vf, required); err != nil {
