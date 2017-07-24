@@ -1,68 +1,130 @@
 package service
 
-import (
-	"fmt"
-	"testing"
-)
-
-// testDefVal stores a value for testing Definition.
-type testDefVal struct {
-	// value is what the field in Definition should be.
-	value interface{}
-	// isValid indicates the boolean that the value, in isolation, is
-	// expected to cause IsValid to return.
-	isValid bool
-}
+import "testing"
 
 func TestDefinitionHelper(t *testing.T) {
-	// Contains all values to be tested
-	// TODO try all possible combinations against IsValid
-	valTable := map[string][]testDefVal{
-		"Vendor":       []testDefVal{{" flip ", true}, {"flip", true}, {" ", false}, {"", false}},
-		"Prefix":       []testDefVal{{" test ", true}, {"test", true}, {" ", false}, {"", false}},
-		"Name":         []testDefVal{{" serv ", true}, {"serv", true}, {" ", false}, {"", false}},
-		"Dependencies": []testDefVal{{[]string{"flip.test.none"}, true}, {nil, true}},
-		"Init":         []testDefVal{{fakeInit, true}, {fakeDep, true}, {nil, false}},
+	validDef := Definition{
+		Vendor: "flip",
+		Prefix: "test",
+		Name:   "service",
+		Init:   fakeInit,
 	}
-	// Contains indices to Vendor, Prefix, and Name slices in valTable.
-	// This is used to test TrimStrings. The first value is the input and
-	// the second is what the expected output is.
-	trimTable := [][2]int{
-		[2]int{0, 1},
-		[2]int{2, 3},
-		[2]int{1, 1},
-		[2]int{3, 3},
+	validWSDef := Definition{
+		Vendor: " flip",
+		Prefix: "\ttest\n",
+		Name:   " service ",
+		Init:   fakeInit,
 	}
-	sFlds := [3]string{"Vendor", "Prefix", "Name"}
+	invalidWSDef := Definition{
+		Vendor: "\n",
+		Prefix: "\t",
+		Name:   " ",
+		Init:   fakeInit,
+	}
 
-	// Test trimTable against TrimStrings
-	for i, set := range trimTable {
-		vals := map[string][]string{
-			sFlds[0]: make([]string, 2),
-			sFlds[1]: make([]string, 2),
-			sFlds[2]: make([]string, 2),
+	t.Run("InvalidReasonValid", func(t *testing.T) {
+		t.Parallel()
+		if err := InvalidReason(validDef); err != nil {
+			t.Errorf("Valid Definition unexpectedly returned error: %s", err)
 		}
-		// Store strings from indices
-		for _, f := range sFlds {
-			// Input
-			vals[f][0] = valTable[f][set[0]].value.(string)
-			// Expected output
-			vals[f][1] = valTable[f][set[1]].value.(string)
+	})
+	t.Run("InvalidReasonVendor", func(t *testing.T) {
+		t.Parallel()
+		def := validDef
+		def.Vendor = ""
+		if err := InvalidReason(def); err != ErrDefEmptyVendor {
+			t.Errorf("Definition returned an unexpected error: %s", err)
 		}
-		// Run the test
-		t.Run(fmt.Sprintf("Trim%d", i+1), func(t *testing.T) {
-			t.Parallel()
-			def := Definition{vals[sFlds[0]][0], vals[sFlds[1]][0], vals[sFlds[2]][0], nil, nil}
-			TrimStrings(&def)
-			if def.Vendor != vals[sFlds[0]][1] {
-				t.Errorf("%s %q does not match expected value %q", sFlds[0], def.Vendor, vals[sFlds[0]][1])
-			}
-			if def.Prefix != vals[sFlds[1]][1] {
-				t.Errorf("%s %q does not match expected value %q", sFlds[1], def.Prefix, vals[sFlds[1]][1])
-			}
-			if def.Name != vals[sFlds[2]][1] {
-				t.Errorf("%s %q does not match expected value %q", sFlds[2], def.Name, vals[sFlds[2]][1])
-			}
-		})
-	}
+	})
+	t.Run("InvalidReasonPrefix", func(t *testing.T) {
+		t.Parallel()
+		def := validDef
+		def.Prefix = ""
+		if err := InvalidReason(def); err != ErrDefEmptyPrefix {
+			t.Errorf("Definition returned an unexpected error: %s", err)
+		}
+	})
+	t.Run("InvalidReasonName", func(t *testing.T) {
+		t.Parallel()
+		def := validDef
+		def.Name = ""
+		if err := InvalidReason(def); err != ErrDefEmptyName {
+			t.Errorf("Definition returned an unexpected error: %s", err)
+		}
+	})
+	t.Run("InvalidReasonInit", func(t *testing.T) {
+		t.Parallel()
+		def := validDef
+		def.Init = nil
+		if err := InvalidReason(def); err != ErrDefNilInit {
+			t.Errorf("Definition returned an unexpected error: %s", err)
+		}
+	})
+	t.Run("InvalidReasonWhitespace", func(t *testing.T) {
+		t.Parallel()
+		err := InvalidReason(invalidWSDef)
+		if err != ErrDefEmptyVendor && err != ErrDefEmptyPrefix && err != ErrDefEmptyName {
+			t.Errorf("Definition returned an unexpected error: %s", err)
+		}
+	})
+	t.Run("IsValidTrue1", func(t *testing.T) {
+		t.Parallel()
+		if !IsValid(validDef) {
+			t.Errorf("Valid Definition unexpectedly returned false")
+		}
+	})
+	t.Run("IsValidTrue2", func(t *testing.T) {
+		t.Parallel()
+		if !IsValid(validWSDef) {
+			t.Errorf("Valid Definition unexpectedly returned false")
+		}
+	})
+	t.Run("IsValidFalse", func(t *testing.T) {
+		t.Parallel()
+		if IsValid(invalidWSDef) {
+			t.Errorf("Invalid Definition unexpectedly returned true")
+		}
+	})
+	t.Run("TrimStrings1", func(t *testing.T) {
+		t.Parallel()
+		def := validDef
+		TrimStrings(&def)
+		if def.Vendor != "flip" {
+			t.Errorf("Vendor does not match expected value \"flip\"")
+		}
+		if def.Prefix != "test" {
+			t.Errorf("Prefix does not match expected value \"test\"")
+		}
+		if def.Name != "service" {
+			t.Errorf("Name does not match expected value \"service\"")
+		}
+	})
+	t.Run("TrimStrings2", func(t *testing.T) {
+		t.Parallel()
+		def := validWSDef
+		TrimStrings(&def)
+		if def.Vendor != "flip" {
+			t.Errorf("Vendor does not match expected value \"flip\"")
+		}
+		if def.Prefix != "test" {
+			t.Errorf("Prefix does not match expected value \"test\"")
+		}
+		if def.Name != "service" {
+			t.Errorf("Name does not match expected value \"service\"")
+		}
+	})
+	t.Run("TrimStrings3", func(t *testing.T) {
+		t.Parallel()
+		def := invalidWSDef
+		TrimStrings(&def)
+		if def.Vendor != "" {
+			t.Errorf("Vendor does not match expected value \"\"")
+		}
+		if def.Prefix != "" {
+			t.Errorf("Prefix does not match expected value \"\"")
+		}
+		if def.Name != "" {
+			t.Errorf("Name does not match expected value \"\"")
+		}
+	})
 }

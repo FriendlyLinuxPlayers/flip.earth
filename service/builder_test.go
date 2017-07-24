@@ -66,7 +66,6 @@ func TestBuilder(t *testing.T) {
 			t.Errorf("Encountered an error: " + err.Error())
 		}
 	})
-	// TODO Test every possible combination of fields initialized in a Definition.
 	t.Run("Build1", func(t *testing.T) {
 		t.Parallel()
 		b := Builder{
