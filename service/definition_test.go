@@ -2,7 +2,7 @@ package service
 
 import "testing"
 
-func TestDefinitionHelper(t *testing.T) {
+func TestDefinition(t *testing.T) {
 	validDef := Definition{
 		Vendor: "flip",
 		Prefix: "test",
