@@ -3,8 +3,9 @@ package orm
 import (
 	"github.com/friendlylinuxplayers/flip.earth/config"
 	"github.com/jinzhu/gorm"
-	// required driver for gorm
+	// required drivers for gorm
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 type ormConfig struct {
