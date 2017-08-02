@@ -1,13 +1,30 @@
 package config
 
 import (
-	"errors"
 	"fmt"
+	"reflect"
 )
 
-var ErrNotStruct = errors.New("config: Assign \"to\" interface must be a struct")
+const (
+	invalidArgumentPrefix = "config: Assign argument Kind %q is not expected Kind %s"
+	invalidTagPrefix      = "config: \"servconf\" tag for the struct field %q is invalid: %s"
+)
 
-const invalidTagPrefix = "config: \"servconf\" tag for the struct field %q is invalid: %s"
+// InvalidArgumentError implements error, indicating that the value of "to" is not of the expected Kind.
+type InvalidArgumentError struct {
+	// Kind is the unexpected Kind.
+	Kind reflect.Kind
+	// Indirected indicates if the value has been indirected or not
+	Indirected bool
+}
+
+func (e *InvalidArgumentError) Error() string {
+	suffix := fmt.Sprintf("%q", reflect.Ptr)
+	if e.Indirected {
+		suffix = fmt.Sprintf("%q after being indirected", reflect.Struct)
+	}
+	return fmt.Sprintf(invalidArgumentPrefix, e.Kind, suffix)
+}
 
 // InvalidTagError implements error, indicating that there is a problem with the
 // field tags in the struct provided to ServiceConfig.Assign.

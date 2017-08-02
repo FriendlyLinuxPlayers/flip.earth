@@ -8,10 +8,14 @@ import (
 type ServiceConfig map[string]interface{}
 
 func (sc ServiceConfig) Assign(to interface{}) error {
-	t := reflect.TypeOf(to)
-	v := reflect.ValueOf(to)
+	vPtr := reflect.ValueOf(to)
+	if vPtr.Kind() != reflect.Ptr {
+		return &InvalidArgumentError{vPtr.Kind(), false}
+	}
+	v := vPtr.Elem()
+	t := reflect.TypeOf(v.Interface())
 	if v.Kind() != reflect.Struct {
-		return ErrNotStruct
+		return &InvalidArgumentError{v.Kind(), true}
 	}
 	fc := t.NumField()
 	for i := 0; i < fc; i++ {
