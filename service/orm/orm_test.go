@@ -1,6 +1,7 @@
 package orm
 
 import "testing"
+import "github.com/mattn/go-sqlite3"
 
 func TestOrm(t *testing.T) {
 	testConfig := map[string]interface{}{
@@ -9,10 +10,17 @@ func TestOrm(t *testing.T) {
 	}
 	emptyDeps := make(map[string]interface{})
 
-	t.Run("Init", func(t *testing.T) {
-		_, err := Init(emptyDeps, testConfig)
-		if err != nil {
-			t.Errorf("Encountered an error: %s", err.Error())
+	t.Run("InitInvalidConf", func(t *testing.T) {
+		conf := testConfig
+		conf["connection_string"] = "test_data/db/not_exist.db"
+		_, err := Init(emptyDeps, conf)
+		if err == nil {
+			t.Errorf("Invalid conf unexpectedly did not return an error.")
 		}
+		switch err.(type) {
+		case sqlite3.Error:
+			return
+		}
+		t.Errorf("Unexpected error: " + err.Error())
 	})
 }
