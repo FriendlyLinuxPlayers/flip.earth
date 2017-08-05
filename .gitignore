@@ -30,3 +30,6 @@ flip.earth
 
 # Ignore config file
 config/config.json
+
+# dep handles vendor/
+vendor/*

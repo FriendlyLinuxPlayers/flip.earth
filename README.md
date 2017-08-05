@@ -14,6 +14,7 @@ the GNU AGPL version 3. See `LICENSE` for details.
 # Requirements
 
 * [Go](https://golang.org)
+* [Dep](https://github.com/golang/dep) (this should be part of Go soon)
 
 In the future you will probably need PostrgeSQL.
 
@@ -26,9 +27,11 @@ First download and install everything you'll need:
 
 `go get -u github.com/friendlylinuxplayers/flip.earth`
 
-Then build the project:
-
 `cd $GOPATH/src/github.com/friendlylinuxplayers/flip.earth`
+
+`dep ensure`
+
+Then build the project:
 
 `go build`
 
