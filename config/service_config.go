@@ -46,7 +46,7 @@ func (sc ServiceConfig) handleField(tf *reflect.StructField, vf *reflect.Value) 
 
 	fName := strings.TrimSpace(tagVals[0])
 	if fName == "" {
-		return &InvalidTagError{tf.Name, ""}
+		return &EmptyNameTagError{tf.Name}
 	}
 
 	value, ok := sc[fName]
@@ -59,7 +59,7 @@ func (sc ServiceConfig) handleField(tf *reflect.StructField, vf *reflect.Value) 
 
 	if !ok {
 		if required {
-			return &InvalidTagError{tf.Name, fName}
+			return &MissingRequiredError{fName}
 		}
 	} else {
 		if err := assignValueToField(value, vf, required); err != nil {

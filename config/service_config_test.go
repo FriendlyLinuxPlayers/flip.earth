@@ -57,10 +57,8 @@ func TestServiceConfig(t *testing.T) {
 			return
 		}
 		switch err.(type) {
-		case *InvalidTagError:
-			if err.(*InvalidTagError).NameTag == "field_one" {
-				return
-			}
+		case *MissingRequiredError:
+			return
 		}
 		t.Errorf("Assign returned an unexpected error: %s", err)
 	})
