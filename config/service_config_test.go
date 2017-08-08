@@ -53,7 +53,7 @@ func TestServiceConfig(t *testing.T) {
 		cfg := fakeConfig{}
 		err := confInvalidSC1.Assign(&cfg)
 		if err == nil {
-			t.Errorf("Assign did not return an error with invalid input")
+			t.Errorf("Assign did not return an error when missing a required field")
 			return
 		}
 		switch err.(type) {
