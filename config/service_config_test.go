@@ -9,10 +9,14 @@ type fakeConfig struct {
 	unexported string `servconf:"unexported"`
 }
 
+type fakeInvalidConfig struct {
+	NoName string `servconf:" "`
+}
+
 func TestServiceConfig(t *testing.T) {
 	var confValidSC1 ServiceConfig
 	var confValidSC2 ServiceConfig
-	var confInvalidSC1 ServiceConfig
+	var confInvalidSC ServiceConfig
 	confValidSC1 = map[string]interface{}{
 		"field_one":  "test1",
 		"field_two":  true,
@@ -21,11 +25,11 @@ func TestServiceConfig(t *testing.T) {
 	confValidSC2 = map[string]interface{}{
 		"field_one": "test1",
 	}
-	confInvalidSC1 = map[string]interface{}{
+	confInvalidSC = map[string]interface{}{
 		"field_two": true,
 	}
 
-	// TODO add other config structs with invalid tags and test it
+	// TODO test non-convertible values
 	t.Run("AssignValidSC1", func(t *testing.T) {
 		cfg := fakeConfig{}
 		err := confValidSC1.Assign(&cfg)
@@ -58,9 +62,9 @@ func TestServiceConfig(t *testing.T) {
 			t.Errorf("unexported value %q has been changed from \"\"", cfg.unexported)
 		}
 	})
-	t.Run("AssignInvalidSC1", func(t *testing.T) {
+	t.Run("AssignInvalidSC", func(t *testing.T) {
 		cfg := fakeConfig{}
-		err := confInvalidSC1.Assign(&cfg)
+		err := confInvalidSC.Assign(&cfg)
 		if err == nil {
 			t.Errorf("Assign did not return an error when missing a required field")
 			return
@@ -70,5 +74,14 @@ func TestServiceConfig(t *testing.T) {
 			return
 		}
 		t.Errorf("Assign returned an unexpected error: %s", err)
+	})
+	t.Run("AssignInvalidStruct", func(t *testing.T) {
+		cfg := fakeInvalidConfig{}
+		err := confValidSC1.Assign(&cfg)
+		if err == nil {
+			t.Errorf("Assign did not return an error when missing a name tag")
+			return
+		}
+
 	})
 }
