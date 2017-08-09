@@ -3,7 +3,7 @@ language: go
 notifications:
     urls:
         - "https://scalar.vector.im/api/neb/services/hooks/dHJhdmlzLWNpLyU0MEhFUjAlM0FtYXRyaXgub3JnLyUyMWZ4U0VPbnRWSG9sbWpxdU9oWiUzQWZsaXAuZWFydGg"
-    on_success: change
+    on_success: always
     on_failure: always
     on_start: never
     on_cancel: never
