@@ -5,6 +5,8 @@ import "testing"
 type fakeConfig struct {
 	FieldOne string `servconf:"field_one,required"`
 	FieldTwo bool   `servconf:"field_two"`
+	// unexported should be ignored by Assign, without processing tags.
+	unexported string `servconf:"unexported"`
 }
 
 func TestServiceConfig(t *testing.T) {
@@ -12,8 +14,9 @@ func TestServiceConfig(t *testing.T) {
 	var confValidSC2 ServiceConfig
 	var confInvalidSC1 ServiceConfig
 	confValidSC1 = map[string]interface{}{
-		"field_one": "test1",
-		"field_two": true,
+		"field_one":  "test1",
+		"field_two":  true,
+		"unexported": "not used",
 	}
 	confValidSC2 = map[string]interface{}{
 		"field_one": "test1",
@@ -35,6 +38,9 @@ func TestServiceConfig(t *testing.T) {
 		if !cfg.FieldTwo {
 			t.Errorf("FieldTwo value %v is not true", cfg.FieldTwo)
 		}
+		if cfg.unexported != "" {
+			t.Errorf("unexported value %q has been changed from \"\"", cfg.unexported)
+		}
 	})
 	t.Run("AssignValidSC2", func(t *testing.T) {
 		cfg := fakeConfig{}
@@ -47,6 +53,9 @@ func TestServiceConfig(t *testing.T) {
 		}
 		if cfg.FieldTwo {
 			t.Errorf("FieldTwo value %v is not false", cfg.FieldTwo)
+		}
+		if cfg.unexported != "" {
+			t.Errorf("unexported value %q has been changed from \"\"", cfg.unexported)
 		}
 	})
 	t.Run("AssignInvalidSC1", func(t *testing.T) {

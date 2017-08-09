@@ -20,17 +20,17 @@ func (sc ServiceConfig) Assign(to interface{}) error {
 	fc := t.NumField()
 	for i := 0; i < fc; i++ {
 		tf := t.Field(i)
+		vf := v.Field(i)
 		if tf.Anonymous {
 			continue
 		}
 
-		if !v.CanSet() {
+		if !vf.CanSet() {
 			continue
 		}
 		if _, ok := tf.Tag.Lookup("servconf"); !ok {
 			continue
 		}
-		vf := v.Field(i)
 		if err := sc.handleField(&tf, &vf); err != nil {
 			return err
 		}
