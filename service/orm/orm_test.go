@@ -10,6 +10,7 @@ func TestOrm(t *testing.T) {
 	}
 	emptyDeps := make(map[string]interface{})
 
+	// TODO Test a valid config (after setting up test_data/ as we want)
 	t.Run("InitInvalidConf", func(t *testing.T) {
 		conf := testConfig
 		conf["connection_string"] = "test_data/db/not_exist.db"

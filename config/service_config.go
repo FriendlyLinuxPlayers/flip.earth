@@ -74,7 +74,6 @@ func (sc ServiceConfig) handleField(tf *reflect.StructField, vf *reflect.Value) 
 func assignValueToField(value interface{}, vf *reflect.Value, required bool) error {
 	vsc, ok := value.(ServiceConfig)
 	if ok {
-		//TODO figure out if this mess works
 		iface := vf.Interface()
 		err := vsc.Assign(&iface)
 		if err != nil {
