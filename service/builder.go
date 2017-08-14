@@ -1,6 +1,10 @@
 package service
 
-import "github.com/friendlylinuxplayers/flip.earth/config"
+import (
+	"reflect"
+
+	"github.com/friendlylinuxplayers/flip.earth/config"
+)
 
 // Builder is a simple implementation of ContainerBuilder.
 type Builder struct {
@@ -25,7 +29,8 @@ func (b *Builder) Build() (Container, error) {
 		return nil, ErrNilDefs
 	}
 	numDefs := len(b.definitions)
-	servs := make(map[string]interface{}, numDefs)
+	servsByName := make(map[string]interface{}, numDefs)
+	servNamesByType := make(map[reflect.Type]string, numDefs) // In case of decorated services this is already too long
 	for _, def := range b.definitions {
 		if def.Dependencies == nil {
 			def.Dependencies = make([]string, 0)
@@ -33,7 +38,7 @@ func (b *Builder) Build() (Container, error) {
 		numDeps := len(def.Dependencies)
 		deps := make(map[string]interface{}, numDeps)
 		for _, name := range def.Dependencies {
-			dep, ok := servs[name]
+			dep, ok := servsByName[name]
 			if !ok {
 				return nil, &MissingDepError{name, def.Name}
 			}
@@ -49,10 +54,12 @@ func (b *Builder) Build() (Container, error) {
 			return nil, err
 		}
 
-		servs[def.Name] = service
+		servsByName[def.Name] = service
+		servNamesByType[def.Type] = def.Name
 	}
 
 	return &SimpleContainer{
-		services: servs,
+		servicesByName:    servsByName,
+		serviceNameByType: servNamesByType,
 	}, nil
 }

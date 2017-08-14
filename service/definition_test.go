@@ -1,24 +1,31 @@
 package service
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestDefinition(t *testing.T) {
+	tos := reflect.TypeOf("string")
 	validDef := Definition{
 		Vendor: "flip",
 		Prefix: "test",
 		Name:   "service",
+		Type:   tos,
 		Init:   fakeInit,
 	}
 	validWSDef := Definition{
 		Vendor: " flip",
 		Prefix: "\ttest\n",
 		Name:   " service ",
+		Type:   tos,
 		Init:   fakeInit,
 	}
 	invalidWSDef := Definition{
 		Vendor: "\n",
 		Prefix: "\t",
 		Name:   " ",
+		Type:   tos,
 		Init:   fakeInit,
 	}
 

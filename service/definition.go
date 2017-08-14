@@ -1,6 +1,7 @@
 package service
 
 import (
+	"reflect"
 	"strings"
 
 	"github.com/friendlylinuxplayers/flip.earth/config"
@@ -24,6 +25,8 @@ type Definition struct {
 	// Name is what the service should be referred to in the Container.
 	// Leading and trailing whitespace will be trimmed.
 	Name string
+	// Type is the underlying type of that service, this should almost always be an interface
+	Type reflect.Type
 	// Dependencies contains the Names of the other services this service
 	// dependends on.
 	Dependencies []string
@@ -63,6 +66,9 @@ func (d *Definition) invalidReason() error {
 	vendor := strings.TrimSpace(d.Vendor)
 	if vendor == "" {
 		return ErrDefEmptyVendor
+	}
+	if d.Type == nil {
+		return ErrDefNilType
 	}
 	if d.Init == nil {
 		return ErrDefNilInit

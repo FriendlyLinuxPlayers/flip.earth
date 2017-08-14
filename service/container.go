@@ -9,6 +9,13 @@ type Container interface {
 	// Has should return true if a service with the given name exists, false
 	// otherwise.
 	Has(name string) bool
+	// Assign should take a reference to a variable and should assign the service,
+	// which corresponds to that variable's type. If such a service doesn't exist
+	// an error is returned
+	Assign(to interface{}) error
+	// Has Assignable should check if the type of the passed variable can be assigned to
+	// and return the corresponding bool value
+	HasAssignable(typ interface{}) bool
 }
 
 // ContainerBuilder builds the service Container by having service Definitions

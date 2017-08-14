@@ -1,6 +1,7 @@
 package service
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/friendlylinuxplayers/flip.earth/config"
@@ -10,7 +11,7 @@ func fakeInit(deps, conf config.ServiceConfig) (interface{}, error) {
 	return "fakeInit", nil
 }
 func fakeDep(deps, conf config.ServiceConfig) (interface{}, error) {
-	return "fakeDep", nil
+	return 0, nil
 }
 
 func TestBuilder(t *testing.T) {
@@ -19,12 +20,14 @@ func TestBuilder(t *testing.T) {
 		Vendor: "flip",
 		Prefix: "test",
 		Name:   "dep service",
+		Type:   reflect.TypeOf(0),
 		Init:   fakeDep,
 	}
 	fullDef := Definition{
 		Vendor:       "flip",
 		Prefix:       "test",
 		Name:         "service",
+		Type:         reflect.TypeOf("string"),
 		Dependencies: []string{"dep service"},
 		Init:         fakeInit,
 	}

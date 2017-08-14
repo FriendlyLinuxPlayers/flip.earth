@@ -10,6 +10,7 @@ var (
 	ErrDefEmptyPrefix = errors.New("service: Definition prefix must be non-empty and not witespace only")
 	ErrDefEmptyVendor = errors.New("service: Definition vendor must be non-empty and not witespace only")
 	ErrDefNilInit     = errors.New("service: Definition must have an Initializer function")
+	ErrDefNilType     = errors.New("service: Definition must have a type")
 	ErrNilDefs        = errors.New("service: \"definitions\" in ContainerBuilder cannot be nil")
 )
 
