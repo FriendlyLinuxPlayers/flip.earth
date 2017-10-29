@@ -5,71 +5,101 @@ import (
 	"reflect"
 )
 
-// SimpleContainer is a simple implementation of Container.
-type SimpleContainer struct {
-	servicesByName    map[string]interface{}
-	serviceNameByType map[reflect.Type]string
+type item interface {
+	service() (interface{}, error)
 }
 
-// Get returns the service with the matching name. If it doesn't exist, an error
-// is returned.
-func (sc *SimpleContainer) Get(name string) (interface{}, error) {
-	if s, ok := sc.servicesByName[name]; ok {
-		return s, nil
-	}
-	return nil, &MissingServiceError{name}
+type singletonItem struct {
+	instance interface{}
+}
+
+func (si singletonItem) service() (interface{}, error) {
+	return si.instance, nil
+}
+
+type transientItem struct {
+	definition TransientDefinition
+}
+
+func (ti transientItem) service() (interface{}, error) {
+	return ti.definition.BuildTransient()
+}
+
+// SimpleContainer is a simple implementation of Container.
+type SimpleContainer struct {
+	servicesByType map[reflect.Type]item
 }
 
 // Has checks if a service under the given name exists within the container.
-func (sc *SimpleContainer) Has(name string) bool {
-	_, ok := sc.servicesByName[name]
+func (sc *SimpleContainer) Has(typ reflect.Type) bool {
+	_, ok := sc.servicesByType[typ]
 	return ok
+}
+
+func (sc *SimpleContainer) Get(typ reflect.Type) (interface{}, error) {
+	if hasType := sc.Has(typ); !hasType {
+		return nil, fmt.Errorf("simple container: Container does not have type '%s'", typ) //TODO proper error type
+	}
+
+	service, err := sc.servicesByType[typ].service()
+	if err != nil {
+		return nil, err
+	}
+
+	return service, nil
+
 }
 
 // Assign attempts to assign the service to the passed argument, that corresponds with its underlying type
 // if that isn't possible, an error is returned and the passed variable remains unassigned
 func (sc *SimpleContainer) Assign(to interface{}) error {
 
-	vTop := reflect.ValueOf(to)
-	if vTop.Kind() != reflect.Ptr {
+	toValue := reflect.ValueOf(to)
+	if toValue.Kind() != reflect.Ptr {
 		return fmt.Errorf("'to' is not a pointer") //TODO Error types
 	}
-	t := reflect.TypeOf(to).Elem()
-	name, err := sc.getNameForType(t)
+	underlyingType := reflect.TypeOf(to).Elem()
+
+	service, err := sc.Get(underlyingType)
+
 	if err != nil {
 		return err
 	}
 
-	service, err := sc.Get(name)
-	if err != nil {
-		return err
-	}
-
-	// This should hopefully always be a nonprobelamtic action because of how we build the container
-	v := vTop.Elem()
-	serviceV := reflect.ValueOf(service)
-	v.Set(serviceV)
+	reflect.ValueOf(underlyingType).Set(reflect.ValueOf(service)) //TODO check if this is correct
 
 	return nil
 }
 
-func (sc *SimpleContainer) getNameForType(typ reflect.Type) (string, error) {
-	name, hasType := sc.serviceNameByType[typ]
-	if !hasType {
-		return "", fmt.Errorf("simple container: No service name found for type %q", typ) //TODO error types
+func (sc *SimpleContainer) Inject(structPtr interface{}) error {
+	sPtrVal := reflect.ValueOf(structPtr)
+
+	if sPtrVal.Kind() != reflect.Ptr {
+		return fmt.Errorf("'structPtr' is not a a pointer") //TODO Error types
 	}
 
-	return name, nil
-}
+	underlyingType := reflect.TypeOf(structPtr).Elem()
+	numFields := underlyingType.NumField()
+	underlyingValue := reflect.ValueOf(structPtr).Elem()
+	for i := 0; i < numFields; i++ {
+		field := underlyingType.Field(i)
+		_, needsInject := field.Tag.Lookup("inject")
+		if !needsInject {
+			continue
+		}
 
-// HasAssignable checks if the container has a service for the type of the passed argument
-func (sc *SimpleContainer) HasAssignable(typ interface{}) bool {
-	t := reflect.TypeOf(typ)
-	name, err := sc.getNameForType(t)
-	if err != nil {
-		return false
+		valField := underlyingValue.Field(i)
+		if !valField.CanSet() {
+			return fmt.Errorf("simple container: Can't set field '%s' at index '%d' of type '%s'", field.Name, i, underlyingType)
+		}
+
+		service, err := sc.Get(field.Type)
+		if err != nil {
+			return err
+		}
+
+		valField.Set(reflect.ValueOf(service))
 	}
 
-	return sc.Has(name)
-
+	return nil
 }

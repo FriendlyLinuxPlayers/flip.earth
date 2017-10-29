@@ -3,7 +3,7 @@ package service
 import (
 	"reflect"
 
-	"github.com/friendlylinuxplayers/flip.earth/service/config"
+	_ "github.com/friendlylinuxplayers/flip.earth/service/config"
 )
 
 type Definition interface {
@@ -14,10 +14,10 @@ type Definition interface {
 
 type SingletonDefinition interface {
 	Definition
-	BuildSingleton() interface{} //TODO figure out proper type
+	BuildSingleton() (interface{}, error) //TODO figure out proper type
 }
 
 type TransientDefinition interface {
 	Definition
-	BuildTransient() interface{} //TODO figure out proper type
+	BuildTransient() (interface{}, error) //TODO figure out proper type
 }

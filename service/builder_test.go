@@ -34,7 +34,7 @@ func TestBuilder(t *testing.T) {
 
 	t.Run("Insert1", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{}
+		b := SimpleBuilder{}
 		err := b.Insert(fullDef)
 		if err != nil {
 			t.Errorf("Encountered an error:" + err.Error())
@@ -45,7 +45,7 @@ func TestBuilder(t *testing.T) {
 	})
 	t.Run("Insert2", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{}
+		b := SimpleBuilder{}
 		err := b.Insert(dependencyDef)
 		if err != nil {
 			t.Errorf("Encountered an error:" + err.Error())
@@ -60,7 +60,7 @@ func TestBuilder(t *testing.T) {
 	})
 	t.Run("InsertUninitDef", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{}
+		b := SimpleBuilder{}
 		err := b.Insert(emptyDef)
 		if err == nil {
 			t.Errorf("Did not return an error when given an empty Definition.")
@@ -71,7 +71,7 @@ func TestBuilder(t *testing.T) {
 	})
 	t.Run("Build1", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{
+		b := SimpleBuilder{
 			definitions: []Definition{dependencyDef},
 		}
 		_, err := b.Build()
@@ -81,7 +81,7 @@ func TestBuilder(t *testing.T) {
 	})
 	t.Run("Build2", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{
+		b := SimpleBuilder{
 			definitions: []Definition{dependencyDef, fullDef},
 		}
 		_, err := b.Build()
@@ -91,7 +91,7 @@ func TestBuilder(t *testing.T) {
 	})
 	t.Run("BuildInvalidDef1", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{
+		b := SimpleBuilder{
 			definitions: []Definition{fullDef},
 		}
 		_, err := b.Build()
@@ -106,7 +106,7 @@ func TestBuilder(t *testing.T) {
 	})
 	t.Run("BuildInvalidDef2", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{
+		b := SimpleBuilder{
 			definitions: []Definition{fullDef, dependencyDef},
 		}
 		_, err := b.Build()
@@ -121,7 +121,7 @@ func TestBuilder(t *testing.T) {
 	})
 	t.Run("BuildEmpty", func(t *testing.T) {
 		t.Parallel()
-		b := Builder{}
+		b := SimpleBuilder{}
 		_, err := b.Build()
 		if err == nil {
 			t.Errorf("Did not return an error when no Definitions are present.")
