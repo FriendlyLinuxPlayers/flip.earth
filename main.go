@@ -23,7 +23,12 @@ func main() {
 		Name:   "config",
 		Init:   cs.Init,
 	}
-	b.Insert(configDef)
+	error := b.Insert(configDef)
+
+	if error != nil {
+		panic(error)
+	}
+
 	container, error := b.Build()
 	if error != nil {
 		panic(error)

@@ -33,3 +33,6 @@ config/config.json
 
 # dep handles vendor/
 vendor/*
+
+### IntelliJ IDEs ###
+.idea/
