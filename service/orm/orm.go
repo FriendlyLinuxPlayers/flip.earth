@@ -1,7 +1,7 @@
 package orm
 
 import (
-	"github.com/friendlylinuxplayers/flip.earth/config"
+	"gitlab.com/friendlylinuxplayers/flip.earth/config"
 	"github.com/jinzhu/gorm"
 	// required drivers for gorm
 	_ "github.com/jinzhu/gorm/dialects/postgres"

@@ -6,7 +6,7 @@ FLiP.Earth is the website for the Friendly Linux Players community. Features
 include being incomplete and having grand plans implied in the source code.
 
 This code is freely available on
-[GitHub](https://github.com/FriendlyLinuxPlayers/flip.earth) under the terms of
+[GitLab](https://gitlab.com/FriendlyLinuxPlayers/flip.earth) under the terms of
 the GNU AGPL version 3. See `LICENSE` for details.
 
 ## Usage
@@ -25,9 +25,9 @@ We suggest exposing this to the internet via a reverse proxy, such as
 
 First download and install everything you'll need:
 
-`go get -u github.com/friendlylinuxplayers/flip.earth`
+`go get -u gitlab.com/friendlylinuxplayers/flip.earth`
 
-`cd $GOPATH/src/github.com/friendlylinuxplayers/flip.earth`
+`cd $GOPATH/src/gitlab.com/friendlylinuxplayers/flip.earth`
 
 `dep ensure`
 
@@ -46,7 +46,7 @@ By participating in this community, you agree to abide by the terms of our
 
 If you have a bug to report, a feature request, or the desire to otherwise
 contribute, you may either submit an
-[issue on GitHub](https://github.com/FriendlyLinuxPlayers/flip.earth/issues) or
+[issue on GitLab](https://gitlab.com/FriendlyLinuxPlayers/flip.earth/issues) or
 join us in the [Matrix](https://matrix.org) room for our website, at
 [#website:flip.earth](https://matrix.to/#/#website:flip.earth) (our web client
 is available [here](https://riot.flip.earth/#/room/#website:flip.earth)).

@@ -3,7 +3,7 @@ package service
 import (
 	"reflect"
 
-	"github.com/friendlylinuxplayers/flip.earth/config"
+	"gitlab.com/friendlylinuxplayers/flip.earth/config"
 )
 
 // Builder is a simple implementation of ContainerBuilder.

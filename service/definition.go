@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/friendlylinuxplayers/flip.earth/config"
+	"gitlab.com/friendlylinuxplayers/flip.earth/config"
 )
 
 // Initializer is the function to be provided by anything that wants to return a

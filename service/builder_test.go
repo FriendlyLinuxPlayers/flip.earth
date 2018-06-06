@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/friendlylinuxplayers/flip.earth/config"
+	"gitlab.com/friendlylinuxplayers/flip.earth/config"
 )
 
 func fakeInit(deps, conf config.ServiceConfig) (interface{}, error) {

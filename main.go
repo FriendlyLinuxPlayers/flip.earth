@@ -1,17 +1,17 @@
 // FLiP.Earth is the website for the Friendly Linux Players community.
 //
 // See https://FriendlyLinuxPlayers.org for the live website and
-// https://github.com/FriendlyLinuxPlayers/flip.earth for the code.
+// https://gitlab.com/FriendlyLinuxPlayers/flip.earth for the code.
 package main
 
 import (
 	"fmt"
 
-	_ "github.com/friendlylinuxplayers/flip.earth/config"
-	_ "github.com/friendlylinuxplayers/flip.earth/router"
-	_ "github.com/friendlylinuxplayers/flip.earth/server"
-	"github.com/friendlylinuxplayers/flip.earth/service"
-	cs "github.com/friendlylinuxplayers/flip.earth/service/config"
+	_ "gitlab.com/friendlylinuxplayers/flip.earth/config"
+	_ "gitlab.com/friendlylinuxplayers/flip.earth/router"
+	_ "gitlab.com/friendlylinuxplayers/flip.earth/server"
+	"gitlab.com/friendlylinuxplayers/flip.earth/service"
+	cs "gitlab.com/friendlylinuxplayers/flip.earth/service/config"
 )
 
 // TODO refactor out everything so main only contains minimal code

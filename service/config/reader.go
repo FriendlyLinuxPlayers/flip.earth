@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/friendlylinuxplayers/flip.earth/config"
+	"gitlab.com/friendlylinuxplayers/flip.earth/config"
 )
 
 // Init returns the Config service, a struct containing the parsed data.
